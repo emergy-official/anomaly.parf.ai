@@ -1,0 +1,11 @@
+{
+  "awsAccountNumber": "267341338450",
+  "githubActionsRoleSTSARN": "arn:aws:sts::818028758633:assumed-role/github_actions_role/GitHubActions",
+  "adminSSOARN": "arn:aws:sts::818028758633:assumed-role/AWSReservedSSO_AWSAdministratorAccess_8bede5583a622ea8/aws@sampleweb3.dev",
+  "infraSSOARN": "arn:aws:sts::818028758633:assumed-role/AWSReservedSSO_AWSAdministratorAccess_1dc998eb106bbced/aws@emergy.cc",
+  "subProjects": {
+    "staticWebsite": {
+      "domainName": "dev.anomaly.parf.ai"
+    }
+  }
+}

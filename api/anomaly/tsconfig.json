@@ -1,0 +1,18 @@
+{
+    "compilerOptions": {
+        "target": "ES2018", // Or another version that Lambda supports  
+        "module": "CommonJS",
+        "outDir": "./../dist/anomaly-lambda",
+        "rootDir": "./",
+        "strict": true,
+        "esModuleInterop": true
+    },
+    "include": [
+        "*.ts"
+    ],
+    "exclude": [
+        "old",
+        "node_modules",
+        "**/*.spec.ts"
+    ]
+}

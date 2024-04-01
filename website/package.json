@@ -1,0 +1,33 @@
+{
+  "name": "website",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.3.4",
+    "@astrojs/node": "^7.0.4",
+    "@astrojs/preact": "^3.1.0",
+    "@astrojs/rss": "^4.0.1",
+    "@fortawesome/fontawesome-svg-core": "^6.5.1",
+    "@fortawesome/pro-duotone-svg-icons": "^6.5.1",
+    "@fortawesome/pro-solid-svg-icons": "^6.5.1",
+    "@fortawesome/react-fontawesome": "^0.2.0",
+    "@nanostores/preact": "^0.5.0",
+    "astro": "^4.2.0",
+    "axios": "^1.6.7",
+    "chart.js": "^4.4.1",
+    "chartjs-plugin-datalabels": "^2.2.0",
+    "nanostores": "^0.9.5",
+    "preact": "^10.19.3",
+    "sass": "^1.69.7",
+    "typescript": "^5.3.3"
+  },
+  "devDependencies": {
+  }
+}

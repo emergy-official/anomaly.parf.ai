@@ -1,0 +1,116 @@
+# Define the name of the GitHub Action
+name: Deploy Website & anomaly API
+# Define the events that will trigger the action
+on:
+  push:
+    branches:
+      - dev
+      - prod
+
+# Define environment variables
+env:
+  AWS_REGION: us-east-1
+  DEV_ACCOUNT_ID: 267341338450
+  PROD_ACCOUNT_ID: 258317103062
+  ASSUME_ROLE_ARN_DEV: arn:aws:iam::267341338450:role/github-dev--anomaly
+  ASSUME_ROLE_ARN_PROD: arn:aws:iam::258317103062:role/github-prod--anomaly
+  WEBSITE_FOLDER: website
+
+# Define permissions required for the action
+permissions:
+  id-token: write # Required for requesting the JWT
+  contents: read # Required for actions/checkout
+
+# Define the jobs to be executed in the action
+jobs:
+  website:
+    # Define the operating system the action will run on
+    runs-on: ubuntu-latest
+
+    # Prevent a publish loop with auto and GitHub Actions.
+    if: "contains(github.event.head_commit.message, 'deploy:website')"
+
+    # Define the list of steps that the action will go through
+    steps:
+      - name: Git clone the repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: arn:aws:iam::818028758633:role/github_actions_role
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Cache Node.js modules
+        uses: actions/cache@v4
+        with:
+          path: "**/node_modules"
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+  
+      - name: Install Node.js module dependencies - website
+        run: |
+          npm config set "@fortawesome:registry" https://npm.fontawesome.com/
+          npm config set "//npm.fontawesome.com/:_authToken" ${{ secrets.FONT_AWESOME_TOKEN }}
+          cd $WEBSITE_FOLDER && npm install
+
+      - name: Prepare AWS
+        run: |
+          if [ "${{ github.ref }}" = "refs/heads/dev" ]; then
+            echo "ASSUME_ROLE_ARN=$ASSUME_ROLE_ARN_DEV" >> $GITHUB_ENV
+            echo "ACCOUNT_ID=$DEV_ACCOUNT_ID" >> $GITHUB_ENV
+          elif [ "${{ github.ref }}" = "refs/heads/prod" ]; then
+            echo "ASSUME_ROLE_ARN=$ASSUME_ROLE_ARN_PROD" >> $GITHUB_ENV
+            echo "ACCOUNT_ID=$PROD_ACCOUNT_ID" >> $GITHUB_ENV
+          else
+            export ACCOUNT_ID=""
+          fi
+
+      - name: Update the robots.txt and astro.config.mjs
+        run: |
+          # Replace DOMAIN_NAME with the appropriate branch and repository information
+          if [ "${{ github.ref }}" = "refs/heads/dev" ]; then
+            export DYNAMIC_DOMAIN_NAME=$(cat infrastructure/sdlc/envs/dev.json | jq -r '.subProjects.staticWebsite.domainName')
+            echo "ASSUME_ROLE_ARN=$ASSUME_ROLE_ARN_DEV" >> $GITHUB_ENV
+          elif [ "${{ github.ref }}" = "refs/heads/prod" ]; then
+            export DYNAMIC_DOMAIN_NAME=$(cat infrastructure/sdlc/envs/prod.json | jq -r '.subProjects.staticWebsite.domainName')
+            echo "ASSUME_ROLE_ARN=$ASSUME_ROLE_ARN_PROD" >> $GITHUB_ENV
+          else
+            export DYNAMIC_DOMAIN_NAME=""
+          fi
+
+          # Update DOMAIN_NAME in the files if DYNAMIC_DOMAIN_NAME is not empty
+          if [ ! -z "$DYNAMIC_DOMAIN_NAME" ]; then
+            echo "Updating var DOMAIN_NAME to $DYNAMIC_DOMAIN_NAME"
+            sed -i "s/DOMAIN_NAME/$DYNAMIC_DOMAIN_NAME/g" $WEBSITE_FOLDER/public/dev_robots.txt
+            sed -i "s/DOMAIN_NAME/$DYNAMIC_DOMAIN_NAME/g" $WEBSITE_FOLDER/public/prod_robots.txt
+            sed -i "s/DOMAIN_NAME/$DYNAMIC_DOMAIN_NAME/g" $WEBSITE_FOLDER/astro.config.mjs
+          else
+            echo "Var DOMAIN_NAME is empty"
+          fi
+
+          # Set DYNAMIC_DOMAIN_NAME as an environment variable
+          echo "DYNAMIC_DOMAIN_NAME=$DYNAMIC_DOMAIN_NAME" >> $GITHUB_ENV
+
+      - name: Build the website
+        run: |
+          cd $WEBSITE_FOLDER && npm run build
+          echo $(git log --format="%H" -n 1) > dist/version.txt
+
+      - name: Deploy to s3
+        run: |
+          echo "Assume the proper AWS Account from the one already assumed"
+          eval $(aws sts assume-role --role-arn "${{ env.ASSUME_ROLE_ARN }}" --role-session-name github_session | jq -r '.Credentials | "export AWS_ACCESS_KEY_ID=\(.AccessKeyId)\nexport AWS_SECRET_ACCESS_KEY=\(.SecretAccessKey)\nexport AWS_SESSION_TOKEN=\(.SessionToken)\n"')
+          echo $(aws sts get-caller-identity)
+          echo "Copying to S3"
+          cd $WEBSITE_FOLDER 
+          aws s3 cp ./dist/ s3://${{ env.DYNAMIC_DOMAIN_NAME }}/ --recursive --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers --cache-control max-age=31536000,public
+          
+          echo "Clear the cache"
+          echo export DISTRIBUTION_ID=$(aws cloudfront list-distributions --query "DistributionList.Items[*].{id:Id,origin:Origins.Items[0].Id}[?origin=='${{ env.DYNAMIC_DOMAIN_NAME }}'].id" --output text)
+          export DISTRIBUTION_ID=$(aws cloudfront list-distributions --query "DistributionList.Items[*].{id:Id,origin:Origins.Items[0].Id}[?origin=='${{ env.DYNAMIC_DOMAIN_NAME }}'].id" --output text)
+          
+          if [[ -z "$DISTRIBUTION_ID" ]]; then  
+            export DISTRIBUTION_ID=$(aws cloudfront list-distributions --query "DistributionList.Items[*].{id:Id,origin:Origins.Items[1].Id}[?origin=='${{ env.DYNAMIC_DOMAIN_NAME }}'].id" --output text)  
+          fi
+
+          aws cloudfront create-invalidation --distribution-id $DISTRIBUTION_ID --paths "/*"

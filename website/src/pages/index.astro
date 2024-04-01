@@ -1,0 +1,17 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Form from "../components/Form";
+const pageTitle = "Segment Analysis";
+---
+
+<BaseLayout pageTitle={pageTitle}>
+  <div class="form-container">
+    <Form client:only />
+  </div>
+
+  <a
+    class="github"
+    href="https://github.com/emergy-official/segment.parf.ai"
+    target="_blank">Github</a
+  >
+</BaseLayout>
