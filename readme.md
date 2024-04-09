@@ -51,3 +51,4 @@ docker push "$ACCOUNT_ID".dkr.ecr.us-east-1.amazonaws.com/anomaly-inference-api:
 
 # docker run --platform linux/amd64 -p 9000:8080 anomaly-inference-api:$IMG_VERSION
 ````
+
