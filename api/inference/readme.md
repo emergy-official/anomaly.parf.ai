@@ -1,4 +1,4 @@
-# Segment.parf.ai - Inference code
+# Anomaly.parf.ai - Inference code
 
 ## Introduction
 

@@ -1,4 +1,4 @@
-import { pingInference, segmentImage } from "./helper";
+import { pingInference, anomalyImage } from "./helper";
 import fs from "fs"
 // Test feedback values
 test('Ping inference', async () => {
@@ -7,10 +7,10 @@ test('Ping inference', async () => {
 });
 
 // // Test sending feedback values
-test('Segment image', async () => {
+test('Anomaly image', async () => {
     const fileBuffer = fs.readFileSync("test.png");
     const encodedString = fileBuffer.toString("base64");
-    const response:any = await segmentImage(encodedString);
+    const response:any = await anomalyImage(encodedString);
     // const body: any = JSON.parse(response.body)
     expect(response?.predictions?.base64_image?.length).toBeGreaterThan(0)
     expect(Object.keys(response?.predictions?.polygons_json)?.length).toBeGreaterThan(0)

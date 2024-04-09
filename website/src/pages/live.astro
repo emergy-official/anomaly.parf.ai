@@ -1,12 +1,12 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import Form from "../components/Form";
+import Camera from "../components/Camera";
 const pageTitle = "Anomaly Analysis";
 ---
 
 <BaseLayout pageTitle={pageTitle}>
   <div class="form-container">
-    <Form client:only />
+    <Camera client:only />
   </div>
 
   <a

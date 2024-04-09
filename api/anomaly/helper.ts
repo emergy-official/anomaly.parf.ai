@@ -53,7 +53,7 @@ export const pingInference = async () => {
         }
     }
 };
-export const segmentImage = async (encodedString: string) => {
+export const anomalyImage = async (encodedString: string) => {
     try {
         const data = JSON.stringify({ image: encodedString });
 

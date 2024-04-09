@@ -4,8 +4,8 @@ import fs from "fs"
 export AWS_ACCESS_KEY_ID=
 export AWS_SECRET_ACCESS_KEY=
 export AWS_REGION=us-east-1
-export INFERANCE_NAME=segment-api
-export INFERANCE_URL=https://runtime.sagemaker.us-east-1.amazonaws.com/endpoints/segment-api
+export INFERANCE_NAME=anomaly-api
+export INFERANCE_URL=https://runtime.sagemaker.us-east-1.amazonaws.com/endpoints/anomaly-api
 */
 
 const runtimeClient = new SageMakerRuntimeClient({ region: "us-east-1" });

@@ -1,8 +1,8 @@
-# Segment.parf.ai - Segment API
+# Anomaly.parf.ai - Anomaly API
 
 ## Introduction
 
-The segment API takes an image encoded in base64 as argument and returns the mask
+The anomaly API takes an image encoded in base64 as argument and returns the mask
 You can either get the latest 20 feedbacks or submit a feedback.
 
 This API is executed on AWS Lambda in the `NodeJS20.x` runtime.
@@ -14,16 +14,16 @@ The response time should be ~2s per request after coldstart.
 
 ## API Usage example
 
-- Prod: https://segment.parf.ai/api
-- Dev: https://dev.segment.parf.ai/api
+- Prod: https://anomaly.parf.ai/api
+- Dev: https://dev.anomaly.parf.ai/api
 
-### Segment an image
+### Anomaly an image
 
 ```js
 const request = require("request");
 let options = {
   method: "POST",
-  url: "https://segment.parf.ai/api/segment",
+  url: "https://anomaly.parf.ai/api/anomaly",
   headers: {
     "Content-Type": "application/json",
   },
@@ -53,8 +53,8 @@ Response example
 ## How to test locally
 
 ```bash
-# Go within the segment api
-cd api/segment
+# Go within the anomaly api
+cd api/anomaly
 
 # Install dependencies (using pnpm or npm, yarn, ...)
 pnpm install
@@ -74,8 +74,8 @@ npm run test
 
 If you need to build the lambda layer for the infrastructure and push it manually
 ```sh
-# Go within the segment api
-cd api/segment
+# Go within the anomaly api
+cd api/anomaly
 
 # Create the lambda layer ready to be used by terraform
 npm run prepare:layer
@@ -85,7 +85,7 @@ npm run prepare:layer
 
 **Scripts and Configuration Files**
 
-- **segment.test.ts**: Unit test
+- **anomaly.test.ts**: Unit test
 - **getFeedbacks.ts**: Script to gather feedbacks within DynamoDB
 - **helper.ts**: Reusable functions to share accross other scripts.
 - **index.ts**: Script invoked by the API

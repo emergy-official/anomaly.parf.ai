@@ -1,5 +1,5 @@
 // index.ts  
-import { pingInference, returnData, segmentImage } from './helper';
+import { pingInference, returnData, anomalyImage } from './helper';
 
 // Incoming lambda request
 export async function handler(event: any, _: any) {
@@ -9,7 +9,7 @@ export async function handler(event: any, _: any) {
   if (event.httpMethod == "POST") {
     const params = JSON.parse(event.body);
     if (params.base64) {
-      return segmentImage(params.base64)
+      return anomalyImage(params.base64)
     }
   } else if (event.httpMethod == "GET") {
     // Ping the inference

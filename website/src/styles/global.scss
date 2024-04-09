@@ -49,13 +49,15 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
 }
 
 .form {
   display: flex;
   flex: 0.8;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .form h1 {
@@ -63,6 +65,12 @@ body {
   font-size: 4rem;
   margin-bottom: 20px;
 }
+
+.form .img, .form canvas, .form video {
+  border-radius: 20px;
+  box-shadow: 0 15px 15px #00000040;
+}
+
 
 .form textarea {
   padding: 15px;

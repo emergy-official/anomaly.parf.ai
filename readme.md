@@ -1,13 +1,13 @@
-# Segment.parf.ai
+# Anomaly.parf.ai
 
-![](./segment-1.png)
+![](./anomaly-1.png)
 
 ## Introduction
 
-This project demonstrate semantic segmentation of city street images.
+This project demonstrate semantic anomalyation of city street images.
 
-- **PROD**: https://segment.parf.ai/
-- **DEV**: https://dev.segment.parf.ai/
+- **PROD**: https://anomaly.parf.ai/
+- **DEV**: https://dev.anomaly.parf.ai/
 
 ## Structure
 
@@ -41,11 +41,13 @@ export IMG_VERSION=latest
 docker logout public.ecr.aws
 
 # Build the image
-docker build --platform linux/amd64 -t python-scikit-learn:$IMG_VERSION .
+docker build --platform linux/amd64 -t anomaly-inference-api:$IMG_VERSION .
 
 # Tag the image so you can push it to AWS ECR (private repo)
-docker tag python-scikit-learn:$IMG_VERSION "$ACCOUNT_ID".dkr.ecr.us-east-1.amazonaws.com/anomaly-inference-api:latest
+docker tag anomaly-inference-api:$IMG_VERSION "$ACCOUNT_ID".dkr.ecr.us-east-1.amazonaws.com/anomaly-inference-api:latest
 
 # Push the image
 docker push "$ACCOUNT_ID".dkr.ecr.us-east-1.amazonaws.com/anomaly-inference-api:latest
+
+# docker run --platform linux/amd64 -p 9000:8080 anomaly-inference-api:$IMG_VERSION
 ````
