@@ -40,3 +40,4 @@ artifacts
 *.h5
 *.keras
 input/
+!model.zip

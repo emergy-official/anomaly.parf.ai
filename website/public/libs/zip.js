@@ -870,8 +870,8 @@
 	}
 
 	var DEFAULT_WORKER_SCRIPTS = {
-		deflater: ['smartphone/z-worker.js', 'deflate.js'],
-		inflater: ['smartphone/z-worker.js', 'inflate.js']
+		deflater: ['/smartphone/z-worker.js', 'deflate.js'],
+		inflater: ['/smartphone/z-worker.js', 'inflate.js']
 	};
 	function createWorker(type, callback, onerror) {
 		if (obj.zip.workerScripts !== null && obj.zip.workerScriptsPath !== null) {
@@ -888,7 +888,9 @@
 			scripts = resolveURLs(scripts);
 		} else {
 			scripts = DEFAULT_WORKER_SCRIPTS[type].slice(0);
-			scripts[0] = (obj.zip.workerScriptsPath || '') + scripts[0];
+			scripts[0] = scripts[0];
+			console.log("A", obj.zip.workerScriptsPath)
+			// scripts[0] = (obj.zip.workerScriptsPath || '') + scripts[0];
 		}
 		var worker = new Worker(scripts[0]);
 		// record total consumed time by inflater/deflater/crc32 in this worker
