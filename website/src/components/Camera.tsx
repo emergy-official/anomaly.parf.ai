@@ -9,7 +9,7 @@ export default function Camera() {
 
   const [tableData, setTableData]: any = useState([])
   const [classifier, setClassifier]: any = useState({})
-  const [isPaused, setPause]: any = useState(false)
+  const [isPaused, setPause]: any = useState(true)
 
   useEffect(() => {
 

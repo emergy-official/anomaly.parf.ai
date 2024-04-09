@@ -889,7 +889,6 @@
 		} else {
 			scripts = DEFAULT_WORKER_SCRIPTS[type].slice(0);
 			scripts[0] = scripts[0];
-			console.log("A", obj.zip.workerScriptsPath)
 			// scripts[0] = (obj.zip.workerScriptsPath || '') + scripts[0];
 		}
 		var worker = new Worker(scripts[0]);
