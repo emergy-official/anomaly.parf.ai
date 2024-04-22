@@ -5,10 +5,6 @@ from inference import load_model, predict
 
 app = Flask(__name__)
 
-# If you run it locally you'll need this to allow a local webserver to call it
-# from flask_cors import CORS # Import CORS  
-# CORS(app) # Initialize CORS with default settings which allow all origins for all routes.  
-
 # Load the model by reading the `SM_MODEL_DIR` environment variable
 # which is passed to the container by SageMaker (usually /opt/ml/model).
 model = load_model()
@@ -24,11 +20,13 @@ def ping():
     """
     Healthcheck function.
     """
+    print("Ping received")
+    
     return "pong"
-
 
 @app.route("/invocations", methods=["POST"])  
 def invocations():  
+    
     if request.content_type.startswith('application/json'):  
         content = request.get_json(silent=True)  
         if content and 'image' in content:  

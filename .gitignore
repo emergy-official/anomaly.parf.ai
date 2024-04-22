@@ -41,3 +41,4 @@ artifacts
 *.keras
 input/
 !model.zip
+efficientad_cookies_3

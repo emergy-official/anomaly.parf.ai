@@ -1,6 +1,7 @@
 # Anomaly.parf.ai
 
 ![](./anomaly-1.png)
+# pip freeze | grep -E "Flask|gunicorn|joblib|opencv-python|numpy|requests|Pillow|matplotlib|torch|torchvision"  
 
 ## Introduction
 
@@ -49,6 +50,6 @@ docker tag anomaly-inference-api:$IMG_VERSION "$ACCOUNT_ID".dkr.ecr.us-east-1.am
 # Push the image
 docker push "$ACCOUNT_ID".dkr.ecr.us-east-1.amazonaws.com/anomaly-inference-api:latest
 
-# docker run --platform linux/amd64 -p 9000:8080 anomaly-inference-api:$IMG_VERSION
+# docker run -p 9000:8080 anomaly-inference-api:latest
 ````
 

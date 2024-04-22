@@ -1,8 +1,10 @@
-Flask
-gunicorn
-joblib
-opencv-python==4.9.0.80
+Flask==3.0.3
+gunicorn==22.0.0
+joblib==1.4.0
+matplotlib==3.8.4
 numpy==1.26.4
-edge_impulse_linux==1.0.9
-pyaudio
-six
+opencv-python==4.9.0.80
+requests==2.31.0
+torch==2.2.2
+torchvision==0.17.2
+Pillow==10.3.0

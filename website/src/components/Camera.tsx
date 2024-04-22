@@ -71,8 +71,8 @@ export default function Camera() {
 
     // Capture an image every second  
     const interval = setInterval(async () => {
-      const imageWidth = 96;
-      const imageHeight = 96;
+      const imageWidth = 128;
+      const imageHeight = 128;
       if (canvasRef.current && videoRef.current && classifier.classify && !isPaused) {
         const context = canvasRef.current.getContext('2d');
         context.drawImage(videoRef.current, 0, 0, 500, 375);
@@ -98,11 +98,13 @@ export default function Camera() {
         }
 
         const input = values.reduce((curr, v) => curr.concat(v), []);
-
+        console.log("INPUT", input)
         const startTime = performance.now();
         const res = await classifier.classify(input, false)
         const endTime = performance.now();
         const timeInMS = endTime - startTime;
+        
+        console.log(res)
 
         const bestScore = res?.results.reduce((highest, current) => {
           return current.value > highest.value ? current : highest;

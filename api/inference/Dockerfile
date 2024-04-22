@@ -10,20 +10,20 @@ COPY requirements.txt .
 # and 'python3-pyaudio' as an optional dependency if you prefer to have it.  
 RUN apt-get update && apt-get install -y \  
     libgl1-mesa-glx \  
-    portaudio19-dev \  
-    build-essential \  
-    python3-pyaudio && \  
-    rm -rf /var/lib/apt/lists/*  
-  
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
 # Install Python dependencies from requirements.txt  
-RUN pip install --no-cache-dir -r requirements.txt  
+RUN pip install --no-cache-dir -r requirements.txt
   
 # Copy your application files into the container  
-COPY app.py ./  
+COPY app.py .
 COPY inference.py .  
-COPY model.eim .
 
-RUN chmod +x /app/model.eim  
+RUN mkdir efficientad_cookies_3
+COPY efficientad_cookies_3/all_models.pth ./efficientad_cookies_3/
+COPY efficientad_cookies_3/best_threshold.pkl ./efficientad_cookies_3/
+COPY efficientad_cookies_3/map_normalization.pth ./efficientad_cookies_3/
 
 # Set the entrypoint for the container  
 ENTRYPOINT ["gunicorn", "-b", "0.0.0.0:8080", "app:app"]  

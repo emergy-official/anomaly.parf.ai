@@ -4,12 +4,15 @@ import json
 from PIL import Image, ImageDraw  
 import matplotlib.pyplot as plt  
 import numpy as np  
+from io import BytesIO  
 
 # The local path to your file
-file_path = './banana.jpg'
+file_path = './anomaly_lvl2.jpg'
 
 # The URL of your Flask API endpoint  
-url = 'http://127.0.0.1:8080/invocations'  
+url = 'http://localhost:8887/invocations'  
+# url = 'http://127.0.0.1:9000/invocations'  
+# url = 'http://127.0.0.1:8080/invocations'  
   
 # Open the file in binary mode and read its contents  
 with open(file_path, 'rb') as image_file:  
@@ -25,8 +28,14 @@ response = requests.post(url, data=data, headers=headers)
 
 # If the request is successful, print the response  
 if response.status_code == 200:  
+    
+    resp = response.json()
     print("Success:")  
-    print(response.json())  
+    # print(response.json())  
+    
+    img_data = base64.b64decode(resp["predictions"]["heatmap_image"])  
+    image = Image.open(BytesIO(img_data))  
+    image.save('image.png')  # or 'image.jpg' depending on the format  
 else:  
     print("Error:", response.status_code)  
     print(response.text)
