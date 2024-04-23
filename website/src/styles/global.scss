@@ -65,8 +65,17 @@ body {
   font-size: 4rem;
   margin-bottom: 20px;
 }
+.camera-inner {
+  border-radius: 20px;
+  box-shadow: 0 15px 15px #00000040;
+  overflow: hidden;
+  position: relative;
 
-.form .img, .form canvas, .form video {
+  
+  width: 500px;
+  height: 375px;
+}
+.form .img, .form canvas {
   border-radius: 20px;
   box-shadow: 0 15px 15px #00000040;
 }
