@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from "preact/hooks";
 import { sendAnomalyRequest, startLambda, getRandomElement } from "../utils";
 import ComparisonSlider from "./ComparisonSlider";
+import exif from 'exif-parser';  
+
 export default function Form() {
 
   const [lambdaStarted, setLambdaStarted] = useState(false);
@@ -11,6 +13,7 @@ export default function Form() {
   });
   const [loading, setLoading] = useState(false);
   const fileRef: any = useRef();
+  const [mask, setMask] = useState('');
 
   const triggerClick = () => {
     fileRef.current.click()
@@ -23,16 +26,19 @@ export default function Form() {
   const processNewImage = async (imgBase64: string) => {
     setLoading(true)
     setImage(imgBase64);
+    setMask("");
     setPrediction({
       label: "",
       score: 0
     })
     const res = await sendAnomalyRequest(imgBase64.replace(/^data:image\/[a-zA-Z]+;base64,/, ""))
-    if (res?.predictions?.label) {
+    if (res?.predictions?.classification) {
       setPrediction({
-        label: res?.predictions?.label,
+        label: res?.predictions?.classification,
         score: res?.predictions?.score
       })
+      setMask(`data:image/png;base64,${res?.predictions?.heatmap_image}`);
+
     }
     setLoading(false)
   }
@@ -42,6 +48,12 @@ export default function Form() {
       const reader: any = new FileReader();
       reader.onloadend = async () => {
         if (reader?.result) {
+
+          const buffer = new Uint8Array(reader.result); // Convert result to Uint8Array  
+          const parser = exif.create(buffer.buffer); // Provide ArrayBuffer to exif  
+          const result = parser.parse();  
+          console.log("ORIENTATION", result);  
+
           processNewImage(reader?.result)
         }
       };
@@ -60,16 +72,11 @@ export default function Form() {
         </label>
       </div>
 
-      {image && <img className="img" src={image} alt="Uploaded preview" style={{ maxWidth: '300px' }} />}
+      {image && <ComparisonSlider topImage={image} bottomImage={mask} />}
+      {/* {image && <img className="img" src={image} alt="Uploaded preview" style={{ maxWidth: '300px' }} />} */}
       {prediction?.label ? <>
         <br/> {prediction.label} ({prediction.score.toFixed(4)})
       </> : ""}
-
-      <div class={`loading ${loading ? "icon-visible" : ""}`}>
-        <br/>
-        <i class="fa-solid fa-spinner-scale fa-spin-pulse"></i>
-      </div>
-
     </div>
   );
 }

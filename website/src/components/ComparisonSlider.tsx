@@ -109,16 +109,16 @@ const ComparisonSlider = ({ topImage, bottomImage }) => {
             <div className="comparison-item">
                 {bottomImage ?
                     <div style={{ position: 'relative' }}>
-                        <img src={topImage} alt="Uploaded preview" style={{ maxWidth: '1024px' }} />
+                        <img src={topImage} alt="Uploaded preview" style={{ width: '400px' }} />
                         <img
                             src={bottomImage}
                             alt="Mask"
-                            style={{ maxWidth: '1024px', position: 'absolute', top: 0, left: 0, opacity: 0.65 }}
+                            style={{ maxWidth: '400px', position: 'absolute', top: 0, left: 0, opacity: 0.65 }}
                         />
                     </div>
                     :
                     <div style={{ position: 'relative' }}>
-                        <img src={"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII="} alt="Uploaded preview" style={{ width: '800px', maxHeight: '400px', maxWidth: '1024px' }} />
+                        <img src={"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII="} alt="Uploaded preview" style={{ width: '400px', maxHeight: '400px', maxWidth: '400px' }} />
                     </div>
                 }
             </div>

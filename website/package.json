@@ -23,11 +23,10 @@
     "axios": "^1.6.7",
     "chart.js": "^4.4.1",
     "chartjs-plugin-datalabels": "^2.2.0",
+    "exif-parser": "^0.1.12",
     "nanostores": "^0.9.5",
     "preact": "^10.19.3",
     "sass": "^1.69.7",
     "typescript": "^5.3.3"
-  },
-  "devDependencies": {
   }
 }
