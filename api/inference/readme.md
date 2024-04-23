@@ -7,6 +7,7 @@ This is the code use by the Sagemaker Inference endpoint.
 ## How to test locally
 
 ```bash
+
 # Go within the inference code
 cd api/inference
 
@@ -14,6 +15,8 @@ cd api/inference
 conda create -p venv python=3.11.7 -y  
 conda activate venv/     
 pip install -r requirements.txt
+# macos will need this cmd because docker install torch without GPU
+# and can't have it in the requirements.txt: pip install torch torchvision torchaudio
 
 # Make sure you have a model.kears
 # Run the FLASK API

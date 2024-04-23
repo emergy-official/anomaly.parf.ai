@@ -7,12 +7,12 @@ import numpy as np
 from io import BytesIO  
 
 # The local path to your file
-file_path = './anomaly_lvl2.jpg'
+file_path = './test_1.jpg'
 
 # The URL of your Flask API endpoint  
-url = 'http://localhost:8887/invocations'  
+# url = 'http://localhost:8887/invocations'  
 # url = 'http://127.0.0.1:9000/invocations'  
-# url = 'http://127.0.0.1:8080/invocations'  
+url = 'http://127.0.0.1:8080/invocations'  
   
 # Open the file in binary mode and read its contents  
 with open(file_path, 'rb') as image_file:  

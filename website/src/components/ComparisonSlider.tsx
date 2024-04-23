@@ -83,7 +83,6 @@ const ComparisonSlider = ({ topImage, bottomImage }) => {
         };
     }, [isResizing, handleResize, handleResizeEnd, onKeyDown]);
 
-    console.log("A", bottomImage)
     return <>
         <div className="comparison-slider">
             <div

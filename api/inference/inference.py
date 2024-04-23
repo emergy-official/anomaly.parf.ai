@@ -74,13 +74,12 @@ def model_inference(model, encoded_string):
     
     heatmap_thresholded = np.where(map_combined > best_threshold, map_combined, 0)    
     
-    
     # convert heatmap to image with colormap  
     heatmap_image = plt.cm.jet(heatmap_thresholded)  # Apply jet colormap  
     heatmap_image = (heatmap_image[:, :, :3] * 255).astype(np.uint8)  # Remove alpha channel and convert to uint8  
     heatmap_image = Image.fromarray(heatmap_image)  
-    
-    result_image = Image.blend(image, heatmap_image, alpha=0.5)
+    heatmap_image = heatmap_image.resize((512, 512))  
+    result_image = Image.blend(image.resize((512, 512)), heatmap_image, alpha=0.5)
     
     buffered = io.BytesIO()  
     result_image.save(buffered, format="PNG")  

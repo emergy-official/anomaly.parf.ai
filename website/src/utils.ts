@@ -23,25 +23,26 @@ export const startLambda = async (isStarted: any, setIsStarted: any) => {
 
     let attempt = 0;
     const maxAttempts = 10;
+    setIsStarted(true);
 
-    while (attempt < maxAttempts) {
-        try {
-            console.log(`Attempt ${attempt}`)
-            const timeout = attempt === 0 ? 180000 : 20000;
-            const res: any = await sendAnomalyPingRequest(true, timeout);
-            console.log(res)
-            if (res?.success) {
-                setIsStarted(true);
-                return;  // Successful, exit the function  
-            }
-        } catch (e) {
-            console.error(`Attempt ${attempt + 1} failed. Error:`, e);
-            if (attempt === maxAttempts - 1) {
-                alert(`Cannot initialize the service: ${e.message}`);
-            }
-        }
-        attempt++;
-    }
+    // while (attempt < maxAttempts) {
+    //     try {
+    //         console.log(`Attempt ${attempt}`)
+    //         const timeout = attempt === 0 ? 180000 : 20000;
+    //         const res: any = await sendAnomalyPingRequest(true, timeout);
+    //         console.log(res)
+    //         if (res?.success) {
+    //             setIsStarted(true);
+    //             return;  // Successful, exit the function  
+    //         }
+    //     } catch (e) {
+    //         console.error(`Attempt ${attempt + 1} failed. Error:`, e);
+    //         if (attempt === maxAttempts - 1) {
+    //             alert(`Cannot initialize the service: ${e.message}`);
+    //         }
+    //     }
+    //     attempt++;
+    // }
     return null;
 };
 
