@@ -25,7 +25,7 @@ export INFRA_ACCOUNT_ID=REPLACE_ME
 export ACCOUNT_ID=$DEV_ACCOUNT_ID
 
 # Login from infra account to dev account
-eval $(aws sts assume-role --profile $INFRA_ACCOUNT_ID --role-arn "arn:aws:iam::"$ACCOUNT_ID":role/provision" --role-session-name AWSCLI-Session | jq -r '.Credentials | "export AWS_ACCESS_KEY_ID=\(.AccessKeyId)\nexport AWS_SECRET_ACCESS_KEY=\(.SecretAccessKey)\nexport AWS_SESSION_TOKEN=\(.SessionToken)\n"')
+eval $(aws sts assume-role --profile $INFRA_ACCOUNT_ID --role-arn "arn:aws:iam::"$ACCOUNT_ID":role/c" --role-session-name AWSCLI-Session | jq -r '.Credentials | "export AWS_ACCESS_KEY_ID=\(.AccessKeyId)\nexport AWS_SECRET_ACCESS_KEY=\(.SecretAccessKey)\nexport AWS_SESSION_TOKEN=\(.SessionToken)\n"')
 
 # Download the artifact
 rm -rf artifacts
@@ -51,5 +51,7 @@ docker tag anomaly-inference-api:$IMG_VERSION "$ACCOUNT_ID".dkr.ecr.us-east-1.am
 docker push "$ACCOUNT_ID".dkr.ecr.us-east-1.amazonaws.com/anomaly-inference-api:latest
 
 # docker run -p 9000:8080 anomaly-inference-api:latest
+
+aws s3 cp website/public/datasets "s3://dev.anomaly.parf.ai/datasets" --recursive
 ````
 
