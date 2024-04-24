@@ -112,15 +112,8 @@ jobs:
           fi
         
           echo "Clear the cache"
-          echo export DISTRIBUTION_ID=$(aws cloudfront list-distributions --query "DistributionList.Items[*].{id:Id,origin:Origins.Items[0].Id}[?origin=='${{ env.DYNAMIC_DOMAIN_NAME }}'].id" --output text)
-          export DISTRIBUTION_ID=$(aws cloudfront list-distributions --query "DistributionList.Items[*].{id:Id,origin:Origins.Items[0].Id}[?origin=='${{ env.DYNAMIC_DOMAIN_NAME }}'].id" --output text)
-          
-          if [[ -z "$DISTRIBUTION_ID" ]]; then  
-            export DISTRIBUTION_ID=$(aws cloudfront list-distributions --query "DistributionList.Items[*].{id:Id,origin:Origins.Items[1].Id}[?origin=='${{ env.DYNAMIC_DOMAIN_NAME }}'].id" --output text)  
-          fi
-          
-          if [[ -z "$DISTRIBUTION_ID" ]]; then  
-            export DISTRIBUTION_ID=$(aws cloudfront list-distributions --query "DistributionList.Items[?Aliases.Items!=null&&contains(Aliases.Items, '${{ env.DYNAMIC_DOMAIN_NAME }}')].Id" --output text)  
-          fi
+          echo export DISTRIBUTION_ID=$(aws cloudfront list-distributions --query "DistributionList.Items[?Aliases.Items!=null&&contains(Aliases.Items, '${{ env.DYNAMIC_DOMAIN_NAME }}')].Id" --output text)
+          export DISTRIBUTION_ID=$(aws cloudfront list-distributions --query "DistributionList.Items[?Aliases.Items!=null&&contains(Aliases.Items, '${{ env.DYNAMIC_DOMAIN_NAME }}')].Id" --output text)
+          echo "DISTRIBUTION_ID=$DISTRIBUTION_ID"
 
           aws cloudfront create-invalidation --distribution-id $DISTRIBUTION_ID --paths "/*"
