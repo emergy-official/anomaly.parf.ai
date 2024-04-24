@@ -52,7 +52,7 @@ export default function Form() {
           const buffer = new Uint8Array(reader.result); // Convert result to Uint8Array  
           const parser = exif.create(buffer.buffer); // Provide ArrayBuffer to exif  
           const result = parser.parse();  
-          console.log("ORIENTATION", result);  
+          console.log("ORIENTATION", result);
 
           processNewImage(reader?.result)
         }

@@ -30,8 +30,6 @@ const takeSnapshot = (video, canvas) => {
     if (!context) {
       throw new Error("Canvas not supported");
     }
-    context.translate(canvas.width, 0);
-    context.scale(-1, 1);
 
     context.drawImage(video, 0, 0, imageWidth, imageHeight);
     let imageData = context.getImageData(0, 0, imageWidth, imageHeight);
@@ -81,34 +79,34 @@ const displayAnomalyScoreBlocks = (res, canvasRef, videoRef, cameraInner) => {
       typeof b.height !== 'number') {
       continue;
     }
-    
-    let bb = {  
-      x: b.x / widthFactor,  
-      y: b.y / heightFactor,  
-      width: b.width / widthFactor,  
-      height: b.height / heightFactor,  
-      label: b.label,  
-      value: b.value  
-    };  
-      
-    function valueToJetColor(value) {  
-      const v = Math.max(0, Math.min(value / 100, 1)); // Ensure value is between 0 and 1  
-      const r = Math.floor(255 * Math.min(4 * v - 1.5, -4 * v + 4.5));  
-      const g = Math.floor(255 * Math.min(4 * v - 0.5, -4 * v + 3.5));  
-      const b = Math.floor(255 * Math.min(4 * v + 0.5, -4 * v + 2.5));  
-      return `rgba(${r},${g},${b}, 0.5)`;  
-    }  
-      
-    let el = document.createElement('div');  
-    el.classList.add('bounding-box-container');  
-    el.style.position = 'absolute';  
+
+    let bb = {
+      x: b.x / widthFactor,
+      y: b.y / heightFactor,
+      width: b.width / widthFactor,
+      height: b.height / heightFactor,
+      label: b.label,
+      value: b.value
+    };
+
+    function valueToJetColor(value) {
+      const v = Math.max(0, Math.min((value - 10) / 10, 1)); // Ensure value is between 0 and 1  
+      const r = Math.floor(255 * Math.min(4 * v - 1.5, -4 * v + 4.5));
+      const g = Math.floor(255 * Math.min(4 * v - 0.5, -4 * v + 3.5));
+      const b = Math.floor(255 * Math.min(4 * v + 0.5, -4 * v + 2.5));
+      return `rgba(${r},${g},${b}, 0.5)`;
+    }
+
+    let el = document.createElement('div');
+    el.classList.add('bounding-box-container');
+    el.style.position = 'absolute';
     // Apply jet color map based on b.value  
-    el.style.background = valueToJetColor(bb.value);  
-      
-    el.style.width = (bb.width) + 'px';  
-    el.style.height = (bb.height) + 'px';  
-    el.style.left = (bb.x) + 'px';  
-    el.style.top = (bb.y) + 'px';  
+    el.style.background = valueToJetColor(bb.value);
+
+    el.style.width = (bb.width) + 'px';
+    el.style.height = (bb.height) + 'px';
+    el.style.left = (bb.x) + 'px';
+    el.style.top = (bb.y) + 'px';
 
     // Render label and/or scores. For visual AD, the score is printed
     // in the middle of the bounding box.
@@ -178,8 +176,13 @@ export default function Camera() {
 
     // Access the user's camera  
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-      navigator.mediaDevices.getUserMedia({ video: true })
-        .then((stream) => {
+      let cam = null;
+     if (/Mobi|Android/i.test(navigator.userAgent)) {  
+      cam = navigator.mediaDevices.getUserMedia({ video: { facingMode: { exact: "environment" } } })  
+      } else {  
+        cam = navigator.mediaDevices.getUserMedia({ video: true })  
+      }  
+      cam.then((stream) => {
           if (videoRef.current) videoRef.current.srcObject = stream;
         })
         .catch((err) => console.error("Error accessing the camera: ", err));
@@ -204,6 +207,7 @@ export default function Camera() {
     let interval: any = async () => {
       const imageWidth = 128;
       const imageHeight = 128;
+      cleanCamera(cameraInner)
 
       if (canvasRef.current && videoRef.current && classifier.classify && !isPaused) {
         const context = canvasRef.current.getContext('2d');
@@ -224,7 +228,6 @@ export default function Camera() {
         const endTime = performance.now();
         const timeInMS = endTime - startTime;
 
-        cleanCamera(cameraInner)
         displayAnomalyScoreBlocks(res, canvasRef, videoRef, cameraInner)
         await wait(1)
         interval()
@@ -240,15 +243,15 @@ export default function Camera() {
 
   return (
     <div class="form">
-      <h1>Anomaly Inference (Live)</h1>
+      <h1>Anomaly Inference (Live) </h1>
+      <h2>Width {videoRef?.current?.clientWidth}</h2>
+      <h2>Height{videoRef?.current?.clientHeight}</h2>
       <div class="inputs">
         <label htmlFor="file-input" class="btns">
           <a href="/"><button className={"predict"}>Inference API</button></a>
         </label>
       </div>
       <div ref={cameraInner} className={"camera-inner"}>
-        <video ref={videoRef} autoPlay playsInline style={{ width: `500px`, height: `375px`, transform: 'scaleX(-1)' }}></video>
-        <canvas ref={canvasRef} style={{ display: 'none' }} width={`${canvaHeight}px`} height={`${canvaWidth}px`}></canvas>
       </div>
       <br />
       <button className={"predict"} onClick={() => {
