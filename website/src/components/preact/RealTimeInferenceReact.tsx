@@ -24,7 +24,7 @@ export default function RealTimeInferenceReact() {
       {/* <div className="flex flex-col-reverse md:flex-col md:flex md:flex-row md:flex-row-reverse md:gap-16 py-12 md:py-20"> */}
       <div className="flex flex-col-reverse md:flex md:flex-row md:gap-16 py-12 md:py-20">
         <RealTimeInferenceReactDetail />
-        <div aria-hidden="true" className="md:mt-0 md:basis-1/2 md:self-start">
+        <div className="md:mt-0 md:basis-1/2 md:self-start">
           <div className="relative m-auto max-w-4xl">
             <h3 className="sm:hidden text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">
               <span className="text-accent dark:text-white highlight">Real-time</span> inference

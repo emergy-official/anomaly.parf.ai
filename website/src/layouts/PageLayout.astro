@@ -4,6 +4,9 @@ import Header from '~/components/widgets/Header.astro';
 import Footer from '~/components/widgets/Footer.astro';
 import Announcement from '~/components/widgets/Announcement.astro';
 
+import 'ag-grid-community/styles/ag-grid.css'; // Mandatory CSS required by the grid
+import 'ag-grid-community/styles/ag-theme-quartz.css'; // Optional Theme applied to the grid
+
 import { headerData, footerData } from '~/navigation';
 
 import type { MetaData } from '~/types';
