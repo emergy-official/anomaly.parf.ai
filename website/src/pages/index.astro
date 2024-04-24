@@ -1,17 +1,63 @@
 ---
-import BaseLayout from "../layouts/BaseLayout.astro";
-import Form from "../components/Form";
-const pageTitle = "Anomaly Analysis";
+import Layout from '~/layouts/PageLayout.astro';
+
+import HeroCustom from '~/components/widgets/HeroCustom.astro';
+import Features2Custom from '~/components/widgets/Features2Custom.astro';
+import { getPermalink } from '~/utils/permalinks';
+import Icon from 'node_modules/astro-icon/components/Icon.astro';
+
+const metadata = {
+  title: 'Anomaly.par.ai — Demo project to detect anomalies in cookies',
+  ignoreTitleTemplate: true,
+};
 ---
 
-<BaseLayout pageTitle={pageTitle}>
-  <div class="form-container">
-    <Form client:only />
-  </div>
+<Layout metadata={metadata}>
+  <!-- Hero Widget ******************* -->
 
-  <a
-    class="github"
-    href="https://github.com/emergy-official/anomaly.parf.ai"
-    target="_blank">Github</a
-  >
-</BaseLayout>
+  <HeroCustom>
+    <Fragment slot="title">
+      <span class="text-accent dark:text-white highlight">Anomaly Detection</span> model for Cookies <span class="ml-1 inline-block"
+        ><Icon name="tabler:cookie" /></span
+      >
+    </Fragment>
+
+    <Fragment slot="subtitle">
+      <span class="sm:inline">
+        Dive in a demo project featuring two AI methods for detecting visual anomalies in cookies.</span
+      >
+    </Fragment>
+
+    <Fragment slot="content">
+      <Features2Custom
+        items={[
+          {
+            title: 'Real-time Inference',
+            description: "Using Edge Impulse FOMO-AD model, try out the anomaly inference with your phone's camera.",
+            icon: 'flat-color-icons:selfie',
+            classes: { panel: 'lg:top-5 cursor-pointer' },
+            href: getPermalink('/real-time-inference'),
+          },
+          {
+            title: 'Explore the dataset',
+            description: 'Made out of 600 pictures, three datasets, homemade to controll the full process.',
+            icon: 'flat-color-icons:template',
+            classes: { panel: 'cursor-pointer' },
+            href: getPermalink('/dataset'),
+          },
+
+          {
+            title: 'Serverless Inference',
+            description:
+              'Using the power of Sagemaker Serverless Inference, running a model on the cloud has never been cheaper!',
+            icon: 'flat-color-icons:add-image',
+            classes: { panel: 'lg:top-5 cursor-pointer' },
+            href: getPermalink('/serverless-inference'),
+          },
+        ]}
+      >
+        <Fragment slot="bg"> </Fragment>
+      </Features2Custom>
+    </Fragment>
+  </HeroCustom>
+</Layout>

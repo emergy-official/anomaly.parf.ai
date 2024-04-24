@@ -1,0 +1,68 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+
+import HeroCustom from '~/components/widgets/HeroCustom.astro';
+import Features2Custom from '~/components/widgets/Features2Custom.astro';
+import { getPermalink } from '~/utils/permalinks';
+import { EDGEIMPULSE } from 'astrowind:config';
+import RealTimeInferencePreact from '~/components/preact/RealTimeInferencePreact';
+import ContentCustom from '~/components/widgets/ContentCustom.astro';
+import ServerlessInferencePreact from '~/components/preact/ServerlessInferencePreact';
+
+const metadata = {
+  title: 'AstroWind — Free template for creating websites with Astro + Tailwind CSS',
+  ignoreTitleTemplate: true,
+};
+---
+
+<Layout metadata={metadata}>
+  <ServerlessInferencePreact client:visible />
+  <ContentCustom isAfterContent>
+    <Fragment slot="content"
+      ><p>
+        This model was trained remotely on a g4dn.xlarge instance. It slightly differs from EfficientAD by using
+        5k steps instead of 70k while still achieving similar result. The model deployed here is using the cookie
+        dataset three.
+      </p>
+
+      <p class="mt-5">
+        <span class="font-bold">Why is it taking so much time ?</span>
+      </p><p class="mt-2">
+        For <a
+          class="underline text-[var(--aw-color-primary)]"
+          href="https://aws.amazon.com/sagemaker/pricing/"
+          target="_blank">cost saving</a
+        >! The inference is taking ~190ms on a CPU and <span class="font-bold">less than 3 ms on a GPU</span>. It's
+        behind a <a
+          class="underline text-[var(--aw-color-primary)]"
+          href="https://docs.aws.amazon.com/sagemaker/latest/dg/serverless-endpoints.html"
+          target="_blank">Sagemaker Serverless Endpoint</a
+        >, the cost of a proof of concept like this is about 0.2$ per 1k inference. You can make it very fast by using a
+        provisioned concurrency endpoint, putting the price at ~13$/month to keep it running + 0.18$ per 1k inference.
+        Or even instant by using real-time inference (starting at 42$/month).
+      </p>
+      <p class="mt-5">
+        Using serverless allows to have hundreds of endpoints to show differents ideas without impacting your wallet,
+        once you're ready to scale up, simply switch!
+      </p>
+      <p class="mt-5">
+        <span class="font-bold">I'm getting a 502 error while uploading an image</span>
+      </p><p class="mt-2">
+        There might be multiple reason behind it:<br />
+        <ul class="mt-2 list-disc pl-5">
+          <li>
+            The endpoint configuration is set to allow two concurrent executions. If you try to upload images too
+            quickly, it will result in a 502 error.
+          </li>
+          <li>
+            The model has not been fully optimized to work with any image size, though it can be configured to do so. In
+            this POC, use square images and ensure they are under 5MB.
+          </li>
+          <li>
+            If you still have a problem, create an issue in the Github repository and provide the image you're using.
+          </li>
+        </ul>
+      </p>
+    </Fragment>
+  </ContentCustom>
+</Layout>

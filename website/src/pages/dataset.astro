@@ -1,0 +1,26 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+
+import HeroCustom from '~/components/widgets/HeroCustom.astro';
+import Features2Custom from '~/components/widgets/Features2Custom.astro';
+import { getPermalink } from '~/utils/permalinks';
+
+const metadata = {
+  title: 'AstroWind — Free template for creating websites with Astro + Tailwind CSS',
+  ignoreTitleTemplate: true,
+};
+---
+
+<Layout metadata={metadata}>
+  <!-- Hero Widget ******************* -->
+
+  <HeroCustom>
+    <Fragment slot="title">
+      <span class="text-accent dark:text-white highlight">Dataset</span>
+    </Fragment>
+
+    <Fragment slot="subtitle">
+      <span class="sm:inline"> Use the QR Code below or your.</span>
+    </Fragment>
+  </HeroCustom>
+</Layout>

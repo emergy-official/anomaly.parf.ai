@@ -1,0 +1,65 @@
+.comparison-slider img {
+  width: 100%;
+  height: auto;
+  vertical-align: middle;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+  pointer-events: none;
+}
+
+.comparison-slider {
+  max-width: 800px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 15px 15px rgb(0 0 0 / 25%);
+  border-radius: 20px;
+  border: none;
+}
+
+.comparison-item {
+  overflow: hidden;
+}
+
+.comparison-item.top {
+  z-index: 1;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0;
+}
+
+.comparison-item.top img {
+  height: 100%;
+  object-fit: cover;
+}
+
+.comparison-slider .handle {
+  position: absolute;
+  width: 3px;
+  height: 100%;
+  background: white;
+  z-index: 3;
+  cursor: col-resize;
+  top: 0;
+}
+
+.comparison-slider .handle .handle-btn {
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  font-size: 20px;
+  position: absolute;
+  top: calc(50% - 20px);
+  right: calc(50% - 20px);
+  height: 40px;
+  width: 40px;
+  background: white;
+  border-radius: 8px;
+  padding: 2px;
+}
+
+.comparison-slider .hide {
+  display: none !important;
+}

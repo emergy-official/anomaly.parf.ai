@@ -1,0 +1,42 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import RealTimeInferencePreact from '~/components/preact/RealTimeInferencePreact';
+import ContentCustom from '~/components/widgets/ContentCustom.astro';
+import { EDGEIMPULSE } from 'astrowind:config';
+
+const metadata = {
+  title: 'Anomaly.parf.ai — Real-time inference',
+  ignoreTitleTemplate: true,
+};
+---
+
+<Layout metadata={metadata}>
+  <RealTimeInferencePreact client:visible />
+  <ContentCustom isAfterContent>
+    <Fragment slot="content"
+      ><p>
+        This model was trained within <a
+          class="underline text-[var(--aw-color-primary)]"
+          href="https://studio.edgeimpulse.com/public/376268/latest"
+          target="_blank">Edge Impulse</a
+        >
+        using the "cookies dataset three". It is configured with a <span class="font-bold"
+          >threshold of {EDGEIMPULSE.model_threshold.toFixed(1)}</span
+        >, meaning that any prediction above this value will classify the image as an anomaly. When an anomaly is
+        detected in the live feed, it is highlighted using the <a
+          class="underline text-[var(--aw-color-primary)]"
+          href="https://www.mathworks.com/help/matlab/ref/jet.html"
+          target="_blank">"jet" colormap</a
+        >, which shows the model's confidence levels across different parts of the image.
+      </p>
+      <p class="mt-5">
+        This is a compressed version of the Edge Impulse <a
+          class="underline text-[var(--aw-color-primary)]"
+          href="https://github.com/edgeimpulse/mobile-client"
+          target="_blank">mobile-client</a
+        > project. It doesn't need an API KEY to work. After training, simply provide the exported WebAssembly .zip file and set the threshold in the 'config.yaml'
+        file based on the Edge Impulse logs.
+      </p>
+    </Fragment>
+  </ContentCustom>
+</Layout>
