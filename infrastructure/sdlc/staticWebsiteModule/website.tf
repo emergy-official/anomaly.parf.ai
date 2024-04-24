@@ -95,6 +95,16 @@ resource "aws_cloudfront_distribution" "website" {
       origin_ssl_protocols   = ["TLSv1", "TLSv1.1", "TLSv1.2"]
     }
   }
+  origin {
+
+    domain_name = aws_s3_bucket.website.bucket_regional_domain_name
+    origin_id   = "website-bucket-regional"
+
+    s3_origin_config {
+      origin_access_identity = aws_cloudfront_origin_access_identity.website_datasets.cloudfront_access_identity_path
+    }
+
+  }
 
 
   origin {
@@ -139,10 +149,32 @@ resource "aws_cloudfront_distribution" "website" {
   }
 
   ordered_cache_behavior {
-    path_pattern     = "/api/*"
-    allowed_methods  = ["POST", "HEAD", "OPTIONS", "GET", "PUT", "PATCH", "DELETE"]
+    path_pattern     = "/datasets/*"
+    allowed_methods  = ["GET", "HEAD", "OPTIONS"]
     cached_methods   = ["GET", "HEAD"]
-    target_origin_id = aws_api_gateway_rest_api.website.id
+    target_origin_id = "website-bucket-regional"
+
+    forwarded_values {
+      query_string = false
+      cookies {
+        forward = "none"
+      }
+    }
+
+    min_ttl     = 0
+    default_ttl = 3600
+    max_ttl     = 86400
+
+    compress               = true
+    viewer_protocol_policy = "redirect-to-https"
+  }
+
+
+  ordered_cache_behavior {
+    path_pattern               = "/api/*"
+    allowed_methods            = ["POST", "HEAD", "OPTIONS", "GET", "PUT", "PATCH", "DELETE"]
+    cached_methods             = ["GET", "HEAD"]
+    target_origin_id           = aws_api_gateway_rest_api.website.id
     response_headers_policy_id = aws_cloudfront_response_headers_policy.website.id
 
     forwarded_values {
@@ -215,6 +247,9 @@ resource "aws_s3_bucket_acl" "website" {
 resource "aws_cloudfront_origin_access_identity" "website" {
   comment = "Restrict access to the website s3 only"
 }
+resource "aws_cloudfront_origin_access_identity" "website_datasets" {
+  comment = "Restrict access to the website s3 only for datasets/*"
+}
 
 ####################################################
 # 5. S3 IAM POLICY DOCUMENT TO ALLOW CLOUDFRONT ONLY
@@ -226,7 +261,7 @@ data "aws_iam_policy_document" "website" {
 
     principals {
       type        = "AWS"
-      identifiers = ["${aws_cloudfront_origin_access_identity.website.iam_arn}"]
+      identifiers = ["${aws_cloudfront_origin_access_identity.website.iam_arn}, ${aws_cloudfront_origin_access_identity.website_datasets.iam_arn}"]
     }
   }
 }

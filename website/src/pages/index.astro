@@ -7,7 +7,7 @@ import { getPermalink } from '~/utils/permalinks';
 import Icon from 'node_modules/astro-icon/components/Icon.astro';
 
 const metadata = {
-  title: 'Anomaly.par.ai — Demo project to detect anomalies in cookies',
+  title: 'Anomaly.parf.ai — Demo project to detect anomalies in cookies',
   ignoreTitleTemplate: true,
 };
 ---
@@ -33,14 +33,14 @@ const metadata = {
         items={[
           {
             title: 'Real-time Inference',
-            description: "Using Edge Impulse FOMO-AD model, try out the anomaly inference with your phone's camera.",
+            description: "Using Edge Impulse FOMO-AD model, try out the visual anomaly inference with your phone's camera.",
             icon: 'flat-color-icons:selfie',
             classes: { panel: 'lg:top-5 cursor-pointer' },
             href: getPermalink('/real-time-inference'),
           },
           {
             title: 'Explore the dataset',
-            description: 'Made out of 600 pictures, three datasets, homemade to controll the full process.',
+            description: 'Made out of 600 pictures, three types, homemade to controll the full process.',
             icon: 'flat-color-icons:template',
             classes: { panel: 'cursor-pointer' },
             href: getPermalink('/dataset'),

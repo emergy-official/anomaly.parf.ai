@@ -1,15 +1,12 @@
-import { useState, useEffect, useRef } from 'preact/hooks';
+import React from 'react';
+
+import { useState, useEffect, useRef } from 'react';
 import { cleanCamera, displayAnomalyScoreBlocks, getUserCamera, takeSnapshot, wait } from '~/utils/realtime';
 import { cameraStream, realTimePause, realTimeScore } from '~/stores/stores';
-import { useStore } from '@nanostores/preact';
+import { useStore } from '@nanostores/react';
 import { EDGEIMPULSE } from 'astrowind:config';
 
-import {
-  unzip,
-  urlToBlob,
-  blobToText,
-  blobToDataUrl,
-} from '~/utils/edge-impulse/utils';
+import { unzip, urlToBlob, blobToText, blobToDataUrl } from '~/utils/edge-impulse/utils';
 // import ComparisonSlider from "./ComparisonSlider";
 import { EdgeImpulseClassifier } from '~/utils/edge-impulse/classifier';
 
@@ -37,7 +34,7 @@ export default function CameraCanva() {
       if (!data) return;
 
       const model: any = data.filter((e: any) => e.filename.includes('edge-impulse-standalone.wasm'))?.pop();
-      const js = data.filter((e: any) => e.filename.includes('edge-impulse-standalone.js'))?.pop();
+      const js: any = data.filter((e: any) => e.filename.includes('edge-impulse-standalone.js'))?.pop();
 
       // Load JS
       let loaderText = await blobToText(js.blob);
@@ -94,8 +91,7 @@ export default function CameraCanva() {
     // Capture an image every second
     let interval: any = async () => {
       cleanCamera(cameraInner);
-      if($realTimePause) {
-
+      if ($realTimePause) {
       }
       if (canvasRef.current && videoRef.current && classifier.classify && !$realTimePause && $cameraStream) {
         const context = canvasRef.current.getContext('2d');
@@ -132,8 +128,8 @@ export default function CameraCanva() {
         mean: 0,
         max: 0,
         time: 0,
-        classification: "",
-      })
+        classification: '',
+      });
     };
   }, [$cameraStream, classifier, $realTimePause]);
 

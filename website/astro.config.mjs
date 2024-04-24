@@ -9,10 +9,11 @@ import icon from 'astro-icon';
 import compress from '@playform/compress';
 import astrowind from './vendor/integration';
 import { readingTimeRemarkPlugin, responsiveTablesRehypePlugin, lazyImagesRehypePlugin } from './src/utils/frontmatter.mjs';
-import preact from "@astrojs/preact";
+import react from "@astrojs/react";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const hasExternalScripts = false;
 const whenExternalScripts = (items = []) => hasExternalScripts ? Array.isArray(items) ? items.map(item => item()) : [items()] : [];
+
 
 // https://astro.build/config
 export default defineConfig({
@@ -41,7 +42,7 @@ export default defineConfig({
     Logger: 1
   }), astrowind({
     config: "./src/config.yaml"
-  }), preact()],
+  }), react()],
   image: {
     service: squooshImageService(),
     domains: ["cdn.pixabay.com"]

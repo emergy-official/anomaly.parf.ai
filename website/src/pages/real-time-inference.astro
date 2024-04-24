@@ -1,6 +1,6 @@
 ---
 import Layout from '~/layouts/PageLayout.astro';
-import RealTimeInferencePreact from '~/components/preact/RealTimeInferencePreact';
+import RealTimeInferenceReact from '~/components/preact/RealTimeInferenceReact';
 import ContentCustom from '~/components/widgets/ContentCustom.astro';
 import { EDGEIMPULSE } from 'astrowind:config';
 
@@ -11,7 +11,7 @@ const metadata = {
 ---
 
 <Layout metadata={metadata}>
-  <RealTimeInferencePreact client:visible />
+  <RealTimeInferenceReact client:visible />
   <ContentCustom isAfterContent>
     <Fragment slot="content"
       ><p>

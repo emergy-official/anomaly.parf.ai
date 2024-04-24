@@ -1,6 +1,6 @@
 site:
   name: Anomaly.parf.ai
-  site: 'https://astrowind.vercel.app'
+  site: 'https://anomaly.parf.ai'
   base: '/'
   trailingSlash: false
 
@@ -13,14 +13,14 @@ edgeimpulse:
 # Default SEO metadata
 metadata:
   title:
-    default: AstroWind
-    template: '%s — AstroWind'
+    default: Anomaly.parf.ai
+    template: '%s — Anomaly.parf.ai'
   description: "\U0001F680 Suitable for Startups, Small Business, Sass Websites, Professional Portfolios, Marketing Websites, Landing Pages & Blogs."
   robots:
     index: true
     follow: true
   openGraph:
-    site_name: AstroWind
+    site_name: Anomaly.parf.ai
     images:
       - url: '~/assets/images/default.png'
         width: 1200

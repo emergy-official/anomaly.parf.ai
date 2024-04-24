@@ -1,9 +1,10 @@
+import React from 'react';
 import QRCodeSVG from '~/assets/images/qr-code.svg';
 import { EDGEIMPULSE } from 'astrowind:config';
 
 import { cameraStream, realTimePause, realTimeScore } from '~/stores/stores';
-import { useStore } from '@nanostores/preact';
-import { useRef, useState } from 'preact/hooks';
+import { useStore } from '@nanostores/react';
+import { useRef, useState } from 'react';
 import { sendAnomalyRequest } from '~/utils/serverless';
 import ComparisonSlider from '../ComparaisonSlider/ComparisonSlider';
 
@@ -11,7 +12,7 @@ import serverlessSample from '~/utils/serverless-sample';
 import anomaly from '~/assets/images/anomaly.jpeg';
 import anomalyResult from '~/assets/images/anomaly-result.png';
 
-export default function ServerlessInferencePreactDetail() {
+export default function ServerlessInferenceReactDetail() {
   const inputFile: any = useRef();
 
   const $realTimeScore = useStore(realTimeScore);
@@ -83,19 +84,19 @@ export default function ServerlessInferencePreactDetail() {
   };
 
   return (
-    <div class="flex flex-col-reverse md:flex md:flex-row-reverse md:gap-16 py-12 md:py-20">
-      <div class="md:basis-1/2 md:self-start mt-5 sm:mt-0">
-        <div class="text-lg dark:text-slate-400">
-          <h3 class="hidden sm:block text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">
-            <span class="text-accent dark:text-white highlight">Serverless</span> inference
+    <div className="flex flex-col-reverse md:flex md:flex-row-reverse md:gap-16 py-12 md:py-20">
+      <div className="md:basis-1/2 md:self-start mt-5 sm:mt-0">
+        <div className="text-lg dark:text-slate-400">
+          <h3 className="hidden sm:block text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">
+            <span className="text-accent dark:text-white highlight">Serverless</span> inference
           </h3>
 
-          <div class="">
-            <p class="text-xl text-muted mb-6 dark:text-slate-300">
-              <span class="sm:inline">
+          <div className="">
+            <p className="text-xl text-muted mb-6 dark:text-slate-300">
+              <span className="sm:inline">
                 Using the{' '}
                 <a
-                  class="underline text-[var(--aw-color-primary)]"
+                  className="underline text-[var(--aw-color-primary)]"
                   href="https://arxiv.org/abs/2303.14535"
                   target={'_blank'}
                 >
@@ -104,45 +105,45 @@ export default function ServerlessInferencePreactDetail() {
                 approach, trained on the cookies dataset number three!
               </span>
             </p>
-            <div class="mx-auto w-full max-w-4xl">
-              <p class="text-xl mb-6 font-bold dark:text-slate-300">Anomaly Results</p>
-              <div class="p-4 grid grid-cols-2 gap-4">
-                <p class="font-medium">Score</p>
+            <div className="mx-auto w-full max-w-4xl">
+              <p className="text-xl mb-6 font-bold dark:text-slate-300">Anomaly Results</p>
+              <div className="p-4 grid grid-cols-2 gap-4">
+                <p className="font-medium">Score</p>
                 <p>{prediction.score.toFixed(4)}</p>
 
-                <p class="font-medium">Time</p>
+                <p className="font-medium">Time</p>
                 <p>{prediction.time.toFixed(2)} (sec)</p>
 
-                <p class="font-medium">Classification</p>
+                <p className="font-medium">Classification</p>
                 <p>{prediction.label}</p>
               </div>
             </div>
-            <div class="mt-5 mx-auto gap-8 gap-y-4 md:gap-y-8">
+            <div className="mt-5 mx-auto gap-8 gap-y-4 md:gap-y-8">
               <input
                 ref={inputFile}
                 type="file"
                 id="file-input"
                 accept="image/*"
-                class="hidden"
+                className="hidden"
                 onChange={handleFileChange}
               />
 
               <button
                 disabled={loading}
-                class={`btn-primary ${loading ? 'cursor-not-allowed' : ''}`}
+                className={`btn-primary ${loading ? 'cursor-not-allowed' : ''}`}
                 onClick={toggleFileInput}
               >
                 Upload an image
               </button>
               <button
                 disabled={loading}
-                class={`mt-2 ml-0 lg:mt-0 lg:ml-5 btn-primary ${loading ? 'cursor-not-allowed' : ''}`}
+                className={`mt-2 ml-0 lg:mt-0 lg:ml-5 btn-primary ${loading ? 'cursor-not-allowed' : ''}`}
                 onClick={randomSample}
               >
                 Test a random sample
               </button>
               {error ? (
-                <p class="mt-5 text-red-500">
+                <p className="mt-5 text-red-500">
                   {error}.<br />
                   See below for more details.
                 </p>
@@ -154,10 +155,10 @@ export default function ServerlessInferencePreactDetail() {
         </div>
       </div>
 
-      <div aria-hidden="true" class="md:mt-0 md:basis-1/2 md:self-start">
-        <div class="relative m-auto max-w-4xl">
-          <h3 class="sm:hidden text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">
-            <span class="text-accent dark:text-white highlight">Serverless</span> inference
+      <div aria-hidden="true" className="md:mt-0 md:basis-1/2 md:self-start">
+        <div className="relative m-auto max-w-4xl">
+          <h3 className="sm:hidden text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">
+            <span className="text-accent dark:text-white highlight">Serverless</span> inference
           </h3>
           <ComparisonSlider loading={loading} topImage={image} bottomImage={mask} />
         </div>

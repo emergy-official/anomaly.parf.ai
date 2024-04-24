@@ -1,4 +1,4 @@
-import { getPermalink, getBlogPermalink, getAsset } from './utils/permalinks';
+import { getPermalink } from './utils/permalinks';
 
 export const headerData = {
   links: [
@@ -16,7 +16,7 @@ export const headerData = {
     },
   ],
   actions: [
-    { text: 'Github', href: 'https://github.com/onwidget/astrowind', icon: 'tabler:brand-github', target: '_blank' },
+    { text: 'Github', href: 'https://github.com/emergy-official/anomaly.parf.ai', icon: 'tabler:brand-github', target: '_blank' },
   ],
 };
 

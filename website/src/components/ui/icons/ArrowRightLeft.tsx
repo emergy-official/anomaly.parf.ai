@@ -1,3 +1,4 @@
+import React from 'react';
 export function ArrowRightLeft(props) {
   //  stroke={props.stroke || "white"}
   return (
@@ -10,9 +11,9 @@ export function ArrowRightLeft(props) {
       <path
         fill="none"
         stroke="black"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="2.35"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="2.35"
         d="M21 7H3m15 3l3-3l-3-3M6 20l-3-3l3-3m-3 3h18"
       />
     </svg>

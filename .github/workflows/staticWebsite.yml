@@ -110,7 +110,7 @@ jobs:
           elif [ "${{ github.ref }}" = "refs/heads/prod" ]; then  
             aws s3 cp ./dist/prod_robots.txt s3://${{ env.DYNAMIC_DOMAIN_NAME }}/robots.txt --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers --cache-control max-age=31536000,public
           fi
-          
+        
           echo "Clear the cache"
           echo export DISTRIBUTION_ID=$(aws cloudfront list-distributions --query "DistributionList.Items[*].{id:Id,origin:Origins.Items[0].Id}[?origin=='${{ env.DYNAMIC_DOMAIN_NAME }}'].id" --output text)
           export DISTRIBUTION_ID=$(aws cloudfront list-distributions --query "DistributionList.Items[*].{id:Id,origin:Origins.Items[0].Id}[?origin=='${{ env.DYNAMIC_DOMAIN_NAME }}'].id" --output text)

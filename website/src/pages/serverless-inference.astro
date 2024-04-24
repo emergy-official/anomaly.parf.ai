@@ -5,18 +5,18 @@ import HeroCustom from '~/components/widgets/HeroCustom.astro';
 import Features2Custom from '~/components/widgets/Features2Custom.astro';
 import { getPermalink } from '~/utils/permalinks';
 import { EDGEIMPULSE } from 'astrowind:config';
-import RealTimeInferencePreact from '~/components/preact/RealTimeInferencePreact';
+import RealTimeInferenceReact from '~/components/preact/RealTimeInferenceReact';
 import ContentCustom from '~/components/widgets/ContentCustom.astro';
-import ServerlessInferencePreact from '~/components/preact/ServerlessInferencePreact';
+import ServerlessInferenceReact from '~/components/preact/ServerlessInferenceReact';
 
 const metadata = {
-  title: 'AstroWind — Free template for creating websites with Astro + Tailwind CSS',
+  title: 'Anomaly.parf.ai — Serverless inference',
   ignoreTitleTemplate: true,
 };
 ---
 
 <Layout metadata={metadata}>
-  <ServerlessInferencePreact client:visible />
+  <ServerlessInferenceReact client:visible />
   <ContentCustom isAfterContent>
     <Fragment slot="content"
       ><p>

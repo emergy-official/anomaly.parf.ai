@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'preact/hooks';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import './ComparisonSlider.css';
 import { ArrowRightLeft } from '~/components/ui/icons/ArrowRightLeft';
 import { Loader2 } from '~/components/ui/icons/Loader2';
@@ -95,11 +95,11 @@ const ComparisonSlider = ({ topImage, bottomImage, loading }) => {
           onMouseDown={() => setIsResizing(true)}
           onTouchStart={() => setIsResizing(true)}
         >
-          <div class="handle-btn">
-            <div class={`${loading ? 'hide' : ''}`}>
+          <div className="handle-btn">
+            <div className={`${loading ? 'hide' : ''}`}>
               <ArrowRightLeft />
             </div>
-            <div class={`${!loading ? 'hide' : ''}`}>
+            <div className={`${!loading ? 'hide' : ''}`}>
               <Loader2 />
             </div>
           </div>
