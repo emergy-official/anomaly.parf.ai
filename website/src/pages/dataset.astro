@@ -1,6 +1,8 @@
 ---
 import Layout from '~/layouts/PageLayout.astro';
-import DatasetReact from '~/components/preact/DataseRreact';
+import DatasetReact from '~/components/react/DataseRreact';
+import PieReChart from '~/components/recharts/PieReChart';
+import DatasetReactDetail from '~/components/react/DatasetReactDetail';
 const metadata = {
   title: 'Anomaly.parf.ai — Dataset explorer',
   ignoreTitleTemplate: true,
@@ -8,5 +10,5 @@ const metadata = {
 ---
 
 <Layout metadata={metadata}>
-  <DatasetReact client:only  />
+  <DatasetReactDetail client:only/>
 </Layout>
