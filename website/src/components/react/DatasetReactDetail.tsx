@@ -47,7 +47,7 @@ export default function DatasetReactDetail() {
     <>
       <div className="text-center md:gap-16 pt-12 md:py-10">
         <h3 className="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">
-          <span className="text-accent text-[#2a9d8f]">Dataset</span> Explorer
+          <span className="text-[#2a9d8f]">Dataset</span> Explorer
         </h3>
       </div>
       <div className="md:gap-16 max-w-7xl mx-auto md:py-10 md:flex">
