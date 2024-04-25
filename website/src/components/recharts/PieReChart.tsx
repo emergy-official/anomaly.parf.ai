@@ -18,6 +18,9 @@ export default function PieReChart({ ...props }) {
             );
           })}
         </Pie>
+
+        <Legend />
+        <Tooltip />
       </PieChart>
     </ResponsiveContainer>
   );
