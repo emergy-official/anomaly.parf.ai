@@ -45,6 +45,8 @@ def model_inference(model, encoded_string):
     
     image_data = base64.b64decode(encoded_string)  
     image = Image.open(io.BytesIO(image_data))
+    orientation = get_exif_orientation(image)
+    # print("ORIENTATION", orientation)
     
     orig_width, orig_height = image.size
     image_transformed = transformer(image)  
@@ -80,12 +82,53 @@ def model_inference(model, encoded_string):
     heatmap_image = Image.fromarray(heatmap_image)  
     heatmap_image = heatmap_image.resize((512, 512))  
     result_image = Image.blend(image.resize((512, 512)), heatmap_image, alpha=0.5)
-    
-    buffered = io.BytesIO()  
+
+    if orientation:
+        result_image = apply_exif_orientation(result_image, orientation)
+
+    buffered = io.BytesIO()
     result_image.save(buffered, format="PNG")  
     result_image_64 = base64.b64encode(buffered.getvalue()).decode('utf-8')
     
+    
     return {"classification": classification, "score": float(y_score_image), "heatmap_image": result_image_64}
+
+def apply_exif_orientation(image, orientation):  
+    """  
+    Applies the EXIF Orientation to the image if present.  
+    """  
+    try:  
+        if orientation == 2:  
+            image = image.transpose(Image.FLIP_LEFT_RIGHT)  
+        elif orientation == 3:  
+            image = image.rotate(180)  
+        elif orientation == 4:  
+            image = image.rotate(180).transpose(Image.FLIP_LEFT_RIGHT)  
+        elif orientation == 5:  
+            image = image.rotate(-90).transpose(Image.FLIP_LEFT_RIGHT)  
+        elif orientation == 6:  
+            image = image.rotate(-90)  
+        elif orientation == 7:  
+            image = image.rotate(90).transpose(Image.FLIP_LEFT_RIGHT)  
+        elif orientation == 8:  
+            image = image.rotate(90)  
+    except AttributeError:  
+        # _getexif is not available for all image types or the image does not have EXIF data  
+        pass  
+    return image
+
+def get_exif_orientation(image):  
+    """  
+    Get the EXIF Orientation to the image if present.  
+    """  
+    try:  
+        orientation = ""
+        exif = image._getexif()  
+        orientation = exif.get(0x112, 1)  
+    except AttributeError:  
+        # _getexif is not available for all image types or the image does not have EXIF data  
+        pass  
+    return orientation 
 
 def get_prediction(image):  
     teacher_output = teacher(image)  

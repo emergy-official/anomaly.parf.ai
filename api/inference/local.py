@@ -7,7 +7,7 @@ import numpy as np
 from io import BytesIO  
 
 # The local path to your file
-file_path = './test_1.jpg'
+file_path = './img.jpg'
 
 # The URL of your Flask API endpoint  
 # url = 'http://localhost:8887/invocations'  
@@ -35,7 +35,7 @@ if response.status_code == 200:
     
     img_data = base64.b64decode(resp["predictions"]["heatmap_image"])  
     image = Image.open(BytesIO(img_data))  
-    image.save('image.png')  # or 'image.jpg' depending on the format  
+    image.save('image.jpg')  # or 'image.jpg' depending on the format  
 else:  
     print("Error:", response.status_code)  
     print(response.text)

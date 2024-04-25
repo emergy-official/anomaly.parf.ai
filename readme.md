@@ -52,7 +52,8 @@ docker push "$ACCOUNT_ID".dkr.ecr.us-east-1.amazonaws.com/anomaly-inference-api:
 
 # docker run -p 9000:8080 anomaly-inference-api:latest
 
+
 aws s3 cp website/public/datasets "s3://dev.anomaly.parf.ai/datasets" --recursive
-aws s3 cp website/public/datasets/results "s3://dev.anomaly.parf.ai/datasets/results" --recursive
+aws s3 cp website/public/datasets "s3://anomaly.parf.ai/datasets" --recursive
 ````
 

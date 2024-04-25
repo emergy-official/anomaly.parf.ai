@@ -3,6 +3,8 @@ import { COLORS } from '~/utils/stats/stats';
 
 export default function SimpleBarReChart({ ...props }) {
   return (
+    <ResponsiveContainer  width="100%" height="100%">
+
     <BarChart
       width={800}
       height={300}
@@ -23,5 +25,6 @@ export default function SimpleBarReChart({ ...props }) {
       <Bar dataKey="medium" fill={COLORS[1]} />
       <Bar dataKey="hard" fill={COLORS[2]} />
     </BarChart>
+    </ResponsiveContainer>
   );
 }

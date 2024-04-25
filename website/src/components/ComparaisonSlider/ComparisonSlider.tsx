@@ -3,7 +3,7 @@ import './ComparisonSlider.css';
 import { ArrowRightLeft } from '~/components/ui/icons/ArrowRightLeft';
 import { Loader2 } from '~/components/ui/icons/Loader2';
 
-const ComparisonSlider = ({ topImage, bottomImage, loading }) => {
+const ComparisonSlider = ({ topImage, bottomImage, loading, className }) => {
   const [isResizing, setIsResizing] = useState(false);
   const topImageRef: any = useRef();
   const handleRef: any = useRef();
@@ -85,10 +85,7 @@ const ComparisonSlider = ({ topImage, bottomImage, loading }) => {
 
   return (
     <>
-      <div
-        className="comparison-slider lg:w-[512px] lg:h-[512px] max-w-[512px] w-full aspect-square relative mx-auto inline-block rounded-lg shadow-[0_4px_30px_rgba(0,0,0,0.1)] bg-gray-200 flex flex-col justify-between  
-            dark:shadow-[0_4px_30px_rgba(0,0,0,0.1)] backdrop-blur border border-[#ffffff29] bg-white dark:bg-slate-900 overflow-hidden"
-      >
+      <div className={className}>
         <div
           ref={handleRef}
           className="handle"

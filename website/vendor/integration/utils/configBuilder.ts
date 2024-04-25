@@ -187,7 +187,7 @@ const getAppBlog = (config: Config) => {
 
 const getUI = (config: Config) => {
   const _default = {
-    theme: 'system',
+    theme: 'light',
   };
 
   return merge({}, _default, config?.ui ?? {});

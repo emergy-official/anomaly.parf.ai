@@ -88,7 +88,7 @@ export default function ServerlessInferenceReactDetail() {
       <div className="md:basis-1/2 md:self-start mt-5 sm:mt-0">
         <div className="text-lg dark:text-slate-400">
           <h3 className="hidden sm:block text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">
-            <span className="text-accent dark:text-white highlight">Serverless</span> inference
+            <span className="text-[#2a9d8f] highlight">Serverless</span> inference
           </h3>
 
           <div className="">
@@ -155,12 +155,15 @@ export default function ServerlessInferenceReactDetail() {
         </div>
       </div>
 
-      <div aria-hidden="true" className="md:mt-0 md:basis-1/2 md:self-start">
+      <div  className="md:mt-0 md:basis-1/2 md:self-start">
         <div className="relative m-auto max-w-4xl">
           <h3 className="sm:hidden text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">
-            <span className="text-accent dark:text-white highlight">Serverless</span> inference
+            <span className="text-[#2a9d8f] highlight">Serverless</span> inference
           </h3>
-          <ComparisonSlider loading={loading} topImage={image} bottomImage={mask} />
+          <ComparisonSlider 
+          className="comparison-slider lg:w-[512px] lg:h-[512px] max-w-[512px] w-full aspect-square relative mx-auto inline-block rounded-lg shadow-[0_4px_30px_rgba(0,0,0,0.1)] bg-gray-200 flex flex-col justify-between  
+          dark:shadow-[0_4px_30px_rgba(0,0,0,0.1)] backdrop-blur border border-[#ffffff29] bg-white dark:bg-slate-900 overflow-hidden"
+          loading={loading} topImage={image} bottomImage={mask} />
         </div>
       </div>
     </div>

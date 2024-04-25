@@ -28,8 +28,6 @@ export default function CameraCanva() {
 
   useEffect(() => {
     urlToBlob('/model.zip').then(async (blob) => {
-      console.log('AA');
-
       const data = await unzip(blob);
       if (!data) return;
 

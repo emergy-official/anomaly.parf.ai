@@ -24,19 +24,25 @@ const style = {
 };
 export default function SimpleRadialBarReChart({ ...props }) {
   return (
-    <RadialBarChart
-      width={600}
-      height={520}
-      cx="50%"
-      cy="50%"
-      innerRadius="10%"
-      outerRadius="80%"
-      barSize={22}
-      data={props.data}
-    >
-      <RadialBar  label={{ position: 'outside' }} background dataKey="F1 score" />
-      <Legend iconSize={10} layout="vertical" verticalAlign="middle" wrapperStyle={style} />
-      <Tooltip />
-    </RadialBarChart>
+    <ResponsiveContainer width="100%" height="100%">
+      <RadialBarChart
+        accessibilityLayer
+        title="F1 score per difficulty"
+        width={600}
+        height={520}
+        cx="50%"
+        cy="50%"
+        innerRadius="10%"
+        outerRadius="120%"
+        barSize={30}
+        data={props.data}
+      >
+     
+        <RadialBar aria-label='difficulty' background dataKey="F1 score" />
+        {/* <RadialBar  label={{ position: 'inside', fill: 'black' }} background dataKey="F1 score" /> */}
+        <Legend iconSize={10} layout="vertical" verticalAlign="middle" wrapperStyle={style} />
+        <Tooltip />
+      </RadialBarChart>
+    </ResponsiveContainer>
   );
 }

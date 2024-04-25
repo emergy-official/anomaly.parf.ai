@@ -16,7 +16,7 @@ export default function RealTimeInferenceReactDetail() {
     <div className="md:basis-1/2 md:self-start mt-5 sm:mt-0">
       <div className="text-lg dark:text-slate-400">
         <h3 className="hidden sm:block text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">
-          <span className="text-accent dark:text-white highlight">Real-time</span> inference
+          <span className="text-accent text-[#2a9d8f] highlight">Real-time</span> inference
         </h3>
 
         {!$cameraStream ? (
@@ -24,7 +24,7 @@ export default function RealTimeInferenceReactDetail() {
             <p className="text-xl text-muted mb-6 dark:text-slate-300">
               <span className="sm:inline">Scan the QR code with your phone's camera or click allow access.</span>
             </p>
-            <img className="rounded-lg" src={QRCodeSVG.src} width="250px" />
+            <img alt="QR Code to access the website" className="rounded-lg" src={QRCodeSVG.src} width="250px" />
           </div>
         ) : (
           <div className="">
