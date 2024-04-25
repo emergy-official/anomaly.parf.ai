@@ -27,7 +27,7 @@ export default function RealTimeInferenceReact() {
         <div className="md:mt-0 md:basis-1/2 md:self-start">
           <div className="relative m-auto max-w-4xl">
             <h3 className="sm:hidden text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">
-              <span className="text-accent text-[#2a9d8f] highlight">Real-time</span> inference
+              <span className="text-accent text-[#2a9d8f]">Real-time</span> inference
             </h3>
             {$cameraStream ? (
               <CameraCanvas />
