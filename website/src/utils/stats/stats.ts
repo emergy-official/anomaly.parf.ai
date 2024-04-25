@@ -66,8 +66,8 @@ export const getDatasetDistribution = () => {
 export const getDatasetTableData = (dataset, model) => {
     const res = stats[dataset][model].map(e => ({
         Image: {
-            origin: e.i,
-            result: e.r ? e.r.replace("datasets/", "datasets/results/") : null,
+            origin: e.i.replace("datasets/", "/datasets/"),
+            result: e.r ? e.r.replace("datasets/", "/datasets/results/") : null,
         },
         "Ground Truth": e.c.replace("_", " "),
         Difficulty: e.d,
