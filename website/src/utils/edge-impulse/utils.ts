@@ -7,11 +7,6 @@ declare global {
         };
     }
 }
-
-const getAPIURL = () => {
-    return document.location.host.includes("localhost") ? "https://dev.anomaly.parf.ai/api" : "/api"
-}
-
 export const getRandomElement = (arr: any) => {
     return arr[Math.floor(Math.random() * arr.length)];
 }

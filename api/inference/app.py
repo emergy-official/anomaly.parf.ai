@@ -3,6 +3,8 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 import os  
 from inference import load_model, predict
 
+# USAGE FLASK_APP=app.py flask run --port=8080)
+
 app = Flask(__name__)
 
 # Load the model by reading the `SM_MODEL_DIR` environment variable
@@ -26,7 +28,6 @@ def ping():
 
 @app.route("/invocations", methods=["POST"])  
 def invocations():  
-    
     if request.content_type.startswith('application/json'):  
         content = request.get_json(silent=True)  
         if content and 'image' in content:  

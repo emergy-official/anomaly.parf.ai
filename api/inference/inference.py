@@ -13,15 +13,19 @@ import torch
 import pickle
 import matplotlib.pyplot as plt  
 
+# Initialize a transformer with specific transformations for preprocessing images  
+# Resize the image to 256x256, convert it to tensor, and normalize it  
 transformer = transforms.Compose([  
     transforms.Resize((256, 256)),  
     transforms.ToTensor(),  
     transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])  
 ])
 
+# Load models and normalization maps from files using PyTorch  
 models = torch.load(f"efficientad_cookies_3/all_models.pth", map_location=torch.device('cpu'))
 map_normalization = torch.load("efficientad_cookies_3/map_normalization.pth", map_location=torch.device('cpu'))
 
+# Load best threshold value for model operation using Pickle  
 with open("efficientad_cookies_3/best_threshold.pkl", 'rb') as file:  
     best_threshold = pickle.load(file) 
 
@@ -72,7 +76,7 @@ def model_inference(model, encoded_string):
     
     classification = "anomaly" if y_score_image > best_threshold else "no_anomaly" 
         
-    print("classification", classification, y_score_image)
+    # print("", classification, y_score_image)
     
     heatmap_thresholded = np.where(map_combined > best_threshold, map_combined, 0)    
     

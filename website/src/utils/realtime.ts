@@ -50,8 +50,6 @@ export const takeSnapshot = (video, canvas) => {
     });
 }
 
-
-
 export const cleanCamera = (cameraInner) => {
     cameraInner.current?.querySelectorAll('.bounding-box-container').forEach(el => el.remove());
 }

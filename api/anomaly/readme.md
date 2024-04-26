@@ -2,15 +2,10 @@
 
 ## Introduction
 
-The anomaly API takes an image encoded in base64 as argument and returns the mask
-You can either get the latest 20 feedbacks or submit a feedback.
+The anomaly API takes an image encoded in base64 as argument and returns the anomaly score, the classification and the base64 image including the heatmap.
 
 This API is executed on AWS Lambda in the `NodeJS20.x` runtime.
 It calls the Sagemaker serverless inference endpoint.
-
-Using free tier, the first execution will take ~3sec time as well as ~10sec for the inference endpoint too (reserved concurrency lambda makes it always available for some $$)
-
-The response time should be ~2s per request after coldstart.
 
 ## API Usage example
 
@@ -42,10 +37,9 @@ Response example
 ```json
 {
   "predictions": {
-    "base64_image": "...",
-    "polygons_json": {
-      "<cat>": [<pixelInt>]
-    },
+    "classification": "anomaly",
+    "heatmap_image": "...",
+    "score": 1.18
   }
 }
 ```
@@ -80,18 +74,3 @@ cd api/anomaly
 # Create the lambda layer ready to be used by terraform
 npm run prepare:layer
 ```
-
-## Structure
-
-**Scripts and Configuration Files**
-
-- **anomaly.test.ts**: Unit test
-- **getFeedbacks.ts**: Script to gather feedbacks within DynamoDB
-- **helper.ts**: Reusable functions to share accross other scripts.
-- **index.ts**: Script invoked by the API
-
-**Configuration and Package Management**
-- **package.json**: Libraries used
-- **pnpm-lock.yaml**: By PNPM to reuse the same versions
-- **tsconfig.json**: Typescript config
-- **test.png**: Test image

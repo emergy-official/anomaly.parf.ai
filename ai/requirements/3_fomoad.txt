@@ -1,0 +1,17 @@
+edgeimpulse_api
+ipykernel
+matplotlib
+tensorflow==2.15.0
+opencv-python
+torch
+torchvision
+pyaudio
+six
+tensorflow==2.15.0
+numpy
+Pillow
+scikit-learn
+edge_impulse_linux
+edgeimpulse
+python-dotenv
+pandas

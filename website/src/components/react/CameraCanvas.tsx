@@ -16,9 +16,7 @@ export default function CameraCanva() {
   const canvasRef: any = useRef(null);
   const cameraInner: any = useRef(null);
 
-  const [tableData, setTableData]: any = useState([]);
   const [classifier, setClassifier]: any = useState({});
-  const [isPaused, setPause]: any = useState(false);
   const $cameraStream = useStore(cameraStream);
   const $realTimePause = useStore(realTimePause);
 
@@ -58,23 +56,6 @@ export default function CameraCanva() {
       await c.init();
       setClassifier(c);
     });
-
-    // Access the user's camera
-    // if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-    //     (async () => {
-    //         const permission = await hasCameraPermission();
-    //     })();
-    // let cam: any = null;
-    // if (/Mobi|Android/i.test(navigator.userAgent)) {
-    //     cam = navigator.mediaDevices.getUserMedia({ video: { facingMode: { exact: "environment" } } })
-    // } else {
-    //     cam = navigator.mediaDevices.getUserMedia({ video: true })
-    // }
-    // cam.then((stream) => {
-    //     if (videoRef.current) videoRef.current.srcObject = stream;
-    // })
-    //     .catch((err) => console.error("Error accessing the camera: ", err));
-    // }
 
     // Cleanup function to clear interval and stop camera stream
     return () => {

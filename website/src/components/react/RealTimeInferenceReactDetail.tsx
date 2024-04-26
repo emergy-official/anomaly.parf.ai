@@ -54,7 +54,7 @@ export default function RealTimeInferenceReactDetail() {
                 <p>{$realTimeScore.max.toFixed(2)}</p>
 
                 <p className="font-medium">Time</p>
-                <p>{$realTimeScore.time} (ms)</p>
+                <p>{$realTimeScore.time.toFixed(0)} (ms)</p>
 
                 <p className="font-medium">Classification</p>
                 <p>{$realTimeScore.classification}</p>

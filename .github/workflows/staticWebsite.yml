@@ -10,7 +10,7 @@ on:
 # Define environment variables
 env:
   AWS_REGION: us-east-1
-  DEV_ACCOUNT_ID: 267341338450
+  DEV_ACCOUNT_ID: 267341338450 # Not sensitive
   PROD_ACCOUNT_ID: 258317103062
   ASSUME_ROLE_ARN_DEV: arn:aws:iam::267341338450:role/github-dev--anomaly
   ASSUME_ROLE_ARN_PROD: arn:aws:iam::258317103062:role/github-prod--anomaly
