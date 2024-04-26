@@ -15,7 +15,7 @@ npm run dev
 ### Mobile Client compressed version detail:
 
 - Require the [smartphone folder](public/smartphone)
-- Three files in the [edge-impulse](website/src/utils/edge-impulse) folder
+- Three files in the [edge-impulse](src/utils/edge-impulse) folder
     - zip.astro (the zip.js librairy)
     - classifier.ts - The original one untouched
     - utils.ts - a few function reused and some created
