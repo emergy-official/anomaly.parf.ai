@@ -9,7 +9,6 @@ This project is a full demo featuring Anomaly Detection models on cookies from d
 - **PROD**: https://anomaly.parf.ai/
 - **DEV**: https://dev.anomaly.parf.ai/
 
-
 **MAIN FEATURES**
 
 - Three models (Baseline, EfficientAD, FOMO AD)
@@ -26,8 +25,6 @@ This project is a full demo featuring Anomaly Detection models on cookies from d
 - [`api`](api/) Code the inference API
 - [`infrastructure`](infrastructure/) Code related the automated infrastructure
 - [`website`](website/) Code related to the web app
-
-
 
 ### WEBSITE DEPLOYMENT
 
