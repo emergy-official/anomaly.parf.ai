@@ -46,7 +46,7 @@ def inference_baseline(model, image_path, img_height=160, img_width=160):
     img_array /= 255.
       
     # Prediction  
-    predictions = model.predict(img_array)  
+    predictions = model.predict(img_array, verbose=0)
     predicted_class = np.argmax(predictions, axis=1)  
     predicted_proba = np.max(predictions)  
   

@@ -56,12 +56,18 @@ class ImageTransforms:
         image_size: int. The size to which the images will be resized.  
     """  
     def __init__(self, image_size):  
+        self.training_transform = transforms.Compose([  
+            transforms.Resize((image_size, image_size)),  
+            transforms.RandomRotation(20),
+            transforms.ToTensor(),  
+            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])  
+        ])
+        
         self.default_transform = transforms.Compose([  
             transforms.Resize((image_size, image_size)),  
             transforms.ToTensor(),  
             transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])  
         ])
-  
 
         # Define a transformation that applies a random choice of color adjustments  for the auto encoder
         self.transform_ae = transforms.RandomChoice([  
@@ -70,6 +76,9 @@ class ImageTransforms:
             transforms.ColorJitter(saturation=0.2)  
         ])  
   
+    def val_transform(self, image):
+        return self.default_transform(image), self.default_transform(self.transform_ae(image))  
+    
     def train_transform(self, image):
         """   
         Apply designated image transformations useful for training.  
@@ -80,7 +89,7 @@ class ImageTransforms:
         Returns:  
             Tuple containing the default transformed image and a variably transformed image for autoencoder tasks.  
         """
-        return self.default_transform(image), self.default_transform(self.transform_ae(image))  
+        return self.training_transform(image), self.training_transform(self.transform_ae(image))  
   
 class ImageDataset(Dataset):  
     """   

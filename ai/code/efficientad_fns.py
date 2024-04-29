@@ -34,8 +34,8 @@ class EfficientAD:
         """Executes the full pipeline from data loading to model evaluation."""
         
         # Initialize datasets with corresponding transformations  
-        self.train_dataset = ImageDataset(self.datasets_path["no_anomaly_train_paths"], transform=transforms.Lambda(self.transforms_class.train_transform))  
-        self.validation_dataset = ImageDataset(self.datasets_path["no_anomaly_val_paths"], transform=transforms.Lambda(self.transforms_class.train_transform))
+        self.train_dataset = ImageDataset(self.datasets_path["train_paths"], transform=transforms.Lambda(self.transforms_class.train_transform))  
+        self.validation_dataset = ImageDataset(self.datasets_path["val_paths"], transform=transforms.Lambda(self.transforms_class.val_transform))
 
         # Prepare DataLoaders for training and validation  
         self.train_loader = DataLoader(self.train_dataset, batch_size=1, shuffle=True, num_workers=4, pin_memory=True)
@@ -73,17 +73,12 @@ class EfficientAD:
                 mlflow.log_metric("f1", self.final_f1)
                 mlflow.log_metric("threshold", self.optimal_threshold)
                 
-                mlflow.log_metric("all pred", self.accuracy_threshold(self.scores['y_true_all'], self.scores['y_score_all']))
-                mlflow.log_metric("test pred", self.accuracy_threshold(self.scores['y_true_test'], self.scores['y_score_test']))
+                mlflow.log_metric("anomaly lvl 1 test pred", self.get_best_f1(self.scores['y_true_a1'], self.scores['y_score_a1']))
+                mlflow.log_metric("anomaly lvl 2 test pred", self.get_best_f1(self.scores['y_true_a2'], self.scores['y_score_a2']))
+                mlflow.log_metric("anomaly lvl 3 test pred", self.get_best_f1(self.scores['y_true_a3'], self.scores['y_score_a3']))
+                mlflow.log_metric("anomaly all test pred", self.get_best_f1(self.scores['y_true_a'], self.scores['y_score_a']))
                 
-                mlflow.log_metric("anomaly lvl 1 pred", self.accuracy_threshold(self.scores['y_true_a1'], self.scores['y_score_a1']))
-                mlflow.log_metric("anomaly lvl 2 pred", self.accuracy_threshold(self.scores['y_true_a2'], self.scores['y_score_a2']))
-                mlflow.log_metric("anomaly lvl 3 pred", self.accuracy_threshold(self.scores['y_true_a3'], self.scores['y_score_a3']))
-                mlflow.log_metric("anomaly all pred", self.accuracy_threshold(self.scores['y_true_a'], self.scores['y_score_a']))
-                
-                mlflow.log_metric("no anomaly train pred", self.accuracy_threshold(self.scores['y_true_no_anomaly_train'], self.scores['y_score_no_anomaly_train']))
-                mlflow.log_metric("no anomaly test pred",self.accuracy_threshold(self.scores['y_true_no_anomaly_test'],  self.scores['y_score_no_anomaly_test']))
-                mlflow.log_metric("no anomaly all pred", self.accuracy_threshold(self.scores['y_true_no_anomaly_all'],  self.scores['y_score_no_anomaly_all']))
+                mlflow.log_metric("no anomaly test pred",self.get_best_f1(self.scores['y_true_no_anomaly_test'],  self.scores['y_score_no_anomaly_test'], 0))
                 
                 # Log artifacts to reuse them for deployments
                 mlflow.log_artifact(os.path.join(self.cfg["output_folder_path"], 'all_models.pth')  )
@@ -145,27 +140,30 @@ class EfficientAD:
         # Get paths, and split into train, test, validation sets  
         no_anomaly_paths = glob.glob(f"{self.cfg['dataset_path']}/{self.cfg['subdataset']}/no_anomaly/*.jpg")  # adjust the pattern if needed
 
-        train_paths, test_paths = train_test_split(no_anomaly_paths, test_size=0.2, random_state=self.cfg["seed"])
-        train_paths, val_paths = train_test_split(train_paths, test_size=0.1, random_state=self.cfg["seed"])
+        no_anomaly_train_paths, no_anomaly_test_paths = train_test_split(no_anomaly_paths, test_size=0.2, random_state=self.cfg["seed"])
+        no_anomaly_train_paths,  no_anomaly_val_paths = train_test_split(no_anomaly_train_paths, test_size=0.1, random_state=self.cfg["seed"])
 
         # Path setting for different levels of anomalies
         anomaly_lvl_1_paths = glob.glob(f"{self.cfg['dataset_path']}/{self.cfg['subdataset']}/anomaly_lvl_1/*.jpg")
         anomaly_lvl_2_paths = glob.glob(f"{self.cfg['dataset_path']}/{self.cfg['subdataset']}/anomaly_lvl_2/*.jpg")
         anomaly_lvl_3_paths = glob.glob(f"{self.cfg['dataset_path']}/{self.cfg['subdataset']}/anomaly_lvl_3/*.jpg")
         
+        anomaly_lvl_1_test_paths, anomaly_lvl_1_val_paths = train_test_split(anomaly_lvl_1_paths, test_size=0.2, random_state=self.cfg["seed"])
+        anomaly_lvl_2_test_paths, anomaly_lvl_2_val_paths = train_test_split(anomaly_lvl_2_paths, test_size=0.2, random_state=self.cfg["seed"])
+        anomaly_lvl_3_test_paths, anomaly_lvl_3_val_paths = train_test_split(anomaly_lvl_3_paths, test_size=0.2, random_state=self.cfg["seed"])
+        
         # Structuring all paths into a dictionary for easy access 
         datasets_path = {
-            "no_anomaly_train_paths": train_paths,
-            "no_anomaly_test_paths": test_paths,
-            "no_anomaly_val_paths": val_paths,
+            "anomaly_lvl_1_test_paths": anomaly_lvl_1_test_paths,
+            "anomaly_lvl_2_test_paths": anomaly_lvl_2_test_paths,
+            "anomaly_lvl_3_test_paths": anomaly_lvl_3_test_paths,
+            "no_anomaly_test_paths": no_anomaly_test_paths,
             
-            "anomaly_lvl_1_paths": anomaly_lvl_1_paths,
-            "anomaly_lvl_2_paths": anomaly_lvl_2_paths,
-            "anomaly_lvl_3_paths": anomaly_lvl_3_paths,
-            "all_anomaly_paths": anomaly_lvl_1_paths + anomaly_lvl_2_paths + anomaly_lvl_3_paths,
+            "all_anomaly_test_paths": anomaly_lvl_1_paths + anomaly_lvl_2_paths + anomaly_lvl_3_paths,
             
-            "test_paths": test_paths + anomaly_lvl_1_paths + anomaly_lvl_2_paths + anomaly_lvl_3_paths,
-            "all": no_anomaly_paths + anomaly_lvl_1_paths + anomaly_lvl_2_paths + anomaly_lvl_3_paths
+            "train_paths": no_anomaly_train_paths,
+            "test_paths": no_anomaly_test_paths + anomaly_lvl_1_test_paths + anomaly_lvl_2_test_paths + anomaly_lvl_3_test_paths,
+            "val_paths": no_anomaly_val_paths + anomaly_lvl_1_val_paths + anomaly_lvl_2_val_paths + anomaly_lvl_3_val_paths
         }
         
         print("     Dataset paths:", datasets_path.keys())
@@ -173,8 +171,6 @@ class EfficientAD:
         elapsed_time = (time.time() - start_time) * 1000
         print(f"- OK - Setting datasets path ({elapsed_time:.2f} ms)\n")
         self.datasets_path = datasets_path
-        
-        
         
     def prepare_teacher_student_autoencoder(self):
         """Initializes the teacher, student, and autoencoder models based on config settings."""
@@ -219,7 +215,11 @@ class EfficientAD:
         
         elapsed_time = (time.time() - start_time) * 1000
         print(f"- OK - Prepare teacher, student & autoencoder ({elapsed_time:.2f} ms)\n")
-        
+    
+    def compute_loss(self, outputs, targets):  
+        loss = torch.mean((outputs - targets) ** 2)  
+        return loss  
+    
     def train(self):
         """  
         Train the autoencoder and student models with the teacher model outputs as guidance.  
@@ -241,18 +241,25 @@ class EfficientAD:
         # Schedule learning rate updates 
         scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=int(0.95 * self.cfg["train_steps"]), gamma=0.1)
         
+        # Initialize variables for tracking best performance and applying early stopping  
+        best_f1_score = 0.0 
+        patience_counter = 0
+        patience_limit = 15
+        
         # Progress bar for visual feedback  
-        tqdm_obj = tqdm(range(self.cfg["train_steps"]))
+        tqdm_obj = tqdm(range(self.cfg["train_steps"]) , desc="Training Iterations")
 
         # Training loop
-        for iteration, (image_st, image_ae) in zip(
-                tqdm_obj, self.train_loader_infinite):
+        for iteration in tqdm_obj:
+
+             # Fetch infinite loop of data batches  
+            image_st, image_ae = next(self.train_loader_infinite)      
             
             # Move data to GPU if enabled 
             if self.cfg["on_gpu"]:
                 image_st = image_st.cuda()
                 image_ae = image_ae.cuda()
-                
+            
             # Teacher model inference followed by normalization 
             with torch.no_grad():
                 teacher_output_st = self.teacher(image_st)
@@ -291,6 +298,20 @@ class EfficientAD:
             if iteration % 10 == 0:
                 tqdm_obj.set_description(
                     "       Current loss: {:.4f}  ".format(loss_total.item()))
+                
+             # Validation checking  
+            if iteration % 100 == 0:
+                f1_score = self.validate_anomaly_detection()  
+                if f1_score > best_f1_score:  
+                    best_f1_score = f1_score  
+                    patience_counter = 0  
+                    # Save best model here if desired  
+                else:  
+                    patience_counter += 1  
+    
+                if patience_counter >= patience_limit:  
+                    print(f"Early stopping at iteration {iteration + 1} because validation F1 did not improve.")  
+                    break  
         
         # Switch models to evaluation mode after training
         self.teacher.eval()
@@ -299,7 +320,26 @@ class EfficientAD:
         
         elapsed_time = (time.time() - start_time)
         print(f"- OK - Train ({elapsed_time:.2f} s)\n")
-
+        
+    @torch.no_grad()  
+    def validate_anomaly_detection(self):  
+        self.student.eval()  
+        self.autoencoder.eval()  
+        
+        y_true = []
+        y_score = []
+        
+        # Loop between the validation dataset 20 times
+        # It will do image augmentation every time
+        for image_path in self.datasets_path["val_paths"]:
+            y_true_image, y_score_image = self.get_score(image_path)
+            
+            y_true.append(y_true_image)
+            y_score.append(y_score_image)
+            
+        optimal_threshold, final_f1, final_auc, conf_matrix = self.get_best_threshold(y_true, y_score)
+        print("F1 Validation", final_f1)
+        return final_f1 
 
     def save_models(self):
         """  
@@ -419,38 +459,43 @@ class EfficientAD:
         
         for path in tqdm(dataset_path, desc=desc):
             
-            image = Image.open(path)
-            orig_width, orig_height = image.size  
-            image = self.transforms_class.default_transform(image)
-            image = image[None]
-            
-            if self.cfg["on_gpu"]:
-                image = image.cuda()
-                
-            map_combined, map_st, map_ae = self.predict(image)
-            
-            map_combined = torch.nn.functional.pad(
-                map_combined, 
-                (4, 4, 4, 4)
-            )
-            
-            map_combined = torch.nn.functional.interpolate(
-                map_combined, 
-                (orig_height, orig_width), 
-                mode='bilinear'
-            )
-            
-            map_combined = map_combined[0, 0].cpu().numpy()
-
-            defect_class = os.path.basename(os.path.dirname(path))
-
-            y_true_image = 0 if defect_class == 'no_anomaly' else 1
-            y_score_image = np.max(map_combined)
+            y_true_image, y_score_image = self.get_score(path)
             
             y_true.append(y_true_image)
             y_score.append(y_score_image)
             
         return y_true, y_score
+    
+    def get_score(self, path):
+        image = Image.open(path)
+        orig_width, orig_height = image.size  
+        image = self.transforms_class.default_transform(image)
+        image = image[None]
+        
+        if self.cfg["on_gpu"]:
+            image = image.cuda()
+            
+        map_combined, map_st, map_ae = self.predict(image)
+        
+        map_combined = torch.nn.functional.pad(
+            map_combined, 
+            (4, 4, 4, 4)
+        )
+        
+        map_combined = torch.nn.functional.interpolate(
+            map_combined, 
+            (orig_height, orig_width), 
+            mode='bilinear'
+        )
+        
+        map_combined = map_combined[0, 0].cpu().numpy()
+
+        defect_class = os.path.basename(os.path.dirname(path))
+
+        y_true_image = 0 if defect_class == 'no_anomaly' else 1
+        y_score_image = np.max(map_combined)
+
+        return y_true_image, y_score_image
 
     @torch.no_grad()
     def predict(self, image):  
@@ -494,7 +539,14 @@ class EfficientAD:
         return map_combined, map_st, map_ae
 
         
-    def define_best_threshold(self, y_true, y_score):  
+    def get_best_f1(self, y_true, y_score, pos_label=1, display=False):  
+        y_pred = (y_score >= self.optimal_threshold).astype(int)
+        # print("y_true = ", y_true)
+        # print("y_score = ", y_score)
+        # print("optimal_threshold = ", self.optimal_threshold)
+        # print("Y PRED = ", y_pred)
+        return f1_score(y_true, y_pred, pos_label=pos_label)
+    def get_best_threshold(self, y_true, y_score, display=False):  
         """  
         Identifies the best threshold by the ROC curve and evaluates model by AUC, F1 score and confusion matrix.  
   
@@ -503,55 +555,33 @@ class EfficientAD:
             y_score: list. Target scores, can either be probability estimates of the positive class.  
         """  
         # AUC calculation 
-        self.final_auc = roc_auc_score(y_true=y_true, y_score=y_score)  
-        print(f"\n     - AUC: {self.final_auc * 100:.2f}%")  
+        final_auc = roc_auc_score(y_true=y_true, y_score=y_score)  
         
         fpr, tpr, thresholds = roc_curve(y_true, y_score)  
         optimal_idx = np.argmax(tpr - fpr)  
         optimal_threshold = thresholds[optimal_idx]  
-        print(f"    - Optimal Threshold: {optimal_threshold:.7f}")  
         
-        y_pred = (y_score >= optimal_threshold).astype(int)  
+        y_pred = (y_score >= optimal_threshold).astype(int)
         conf_matrix = confusion_matrix(y_true, y_pred)  
         
         # Calculate F1 score and set the optimal threshold  
-        self.final_f1 = f1_score(y_true, y_pred)
-        self.optimal_threshold = optimal_threshold
-        print(f"    - F1 Score: {self.final_f1:.2f}")
-        print("    - CONFUSION MATRIX:\n", conf_matrix, "\n")  
+        final_f1 = f1_score(y_true, y_pred)
+        optimal_threshold
         
-        # ROC curve plotting
-        plt.figure(figsize=(8, 6))  
-        plt.plot(fpr, tpr, label=f"ROC Curve (AUC = {self.final_auc:.2f})")  
-        plt.scatter(fpr[optimal_idx], tpr[optimal_idx], marker='o', color='red', label=f'Optimal threshold = {self.optimal_threshold:.7f}')  
-        plt.plot([0, 1], [0, 1], 'k--')  # dashed diagonal line  
-        plt.xlabel("False Positive Rate")  
-        plt.ylabel("True Positive Rate")  
-        plt.title("ROC Curve")  
-        plt.legend(loc="best")  
-        plt.grid(True)  
-        plt.show()
+        if display:
+            # ROC curve plotting
+            plt.figure(figsize=(8, 6))  
+            plt.plot(fpr, tpr, label=f"ROC Curve (AUC = {final_auc:.2f})")  
+            plt.scatter(fpr[optimal_idx], tpr[optimal_idx], marker='o', color='red', label=f'Optimal threshold = {optimal_threshold:.7f}')  
+            plt.plot([0, 1], [0, 1], 'k--')  # dashed diagonal line  
+            plt.xlabel("False Positive Rate")  
+            plt.ylabel("True Positive Rate")  
+            plt.title("ROC Curve")  
+            plt.legend(loc="best")  
+            plt.grid(True)  
+            plt.show()
         
-        # Save the optimal threshold for later use 
-        path_threshold=f'{self.cfg["output_folder_path"]}/best_threshold.pkl'
-        with open(path_threshold, 'wb') as f:  
-            pickle.dump(self.optimal_threshold, f)
-                   
-    def accuracy_threshold(self, y_true, y_score): 
-        """  
-        Calculates accuracy based on a predefined threshold.  
-  
-        Args:  
-            y_true: list or numpy.array. True binary labels.  
-            y_score: list or numpy.array. Target scores.  
-  
-        Returns:  
-            float: Accuracy percentage.  
-        """   
-        y_pred = (np.array(y_score) >= self.optimal_threshold).astype(int)  
-        correct_predictions = (y_pred == y_true).sum()  
-        accuracy = (correct_predictions / len(y_true)) * 100  
-        return accuracy
+        return optimal_threshold, final_f1, final_auc, conf_matrix
     
     def evaluate_model(self):
         """   
@@ -565,24 +595,34 @@ class EfficientAD:
         print(f"- Evaluating model")
         
         # Get scores for combined datasets  
-        y_true_all, y_score_all = self.get_scores(self.datasets_path["all"], "     inference all")
-        self.define_best_threshold(y_true_all, y_score_all)
+        y_true_test, y_score_test = self.get_scores(self.datasets_path["test_paths"], "     inference test")
+        optimal_threshold, final_f1, final_auc, conf_matrix = self.get_best_threshold(y_true_test, y_score_test, True)
+        
+        self.final_auc = final_auc
+        self.final_f1 = final_f1
+        self.optimal_threshold = optimal_threshold
+        
+        
+        print(f"\n     - AUC: {final_auc * 100:.2f}%")  
+        print(f"    - Optimal Threshold: {optimal_threshold:.7f}")  
+        print(f"    - F1 Score: {final_f1:.2f}")
+        print("    - CONFUSION MATRIX:\n", conf_matrix, "\n")  
+        
+         # Save the optimal threshold for later use 
+        path_threshold=f'{self.cfg["output_folder_path"]}/best_threshold.pkl'
+        with open(path_threshold, 'wb') as f:  
+            pickle.dump(self.optimal_threshold, f)
         
         # Get scores for datasets with different anomaly levels  
-        y_true_a1, y_score_a1 = self.get_scores(self.datasets_path["anomaly_lvl_1_paths"], "    inference anomaly lvl 1")
-        y_true_a2, y_score_a2 = self.get_scores(self.datasets_path["anomaly_lvl_2_paths"], "    inference anomaly lvl 2")
-        y_true_a3, y_score_a3 = self.get_scores(self.datasets_path["anomaly_lvl_3_paths"], "    inference anomaly lvl 3")
-        y_true_a, y_score_a = self.get_scores(self.datasets_path["all_anomaly_paths"], "    inference all anomaly")
+        y_true_a1, y_score_a1 = self.get_scores(self.datasets_path["anomaly_lvl_1_test_paths"], "    inference anomaly lvl 1 test")
+        y_true_a2, y_score_a2 = self.get_scores(self.datasets_path["anomaly_lvl_2_test_paths"], "    inference anomaly lvl 2 test")
+        y_true_a3, y_score_a3 = self.get_scores(self.datasets_path["anomaly_lvl_3_test_paths"], "    inference anomaly lvl 3 test")
+        y_true_a, y_score_a = self.get_scores(self.datasets_path["all_anomaly_test_paths"], "    inference all anomaly test")
         print("")
         
         # Get scores for no anomaly across training, validation, and test sets  
-        y_true_no_anomaly_train, y_score_no_anomaly_train = self.get_scores(self.datasets_path["no_anomaly_train_paths"] + self.datasets_path["no_anomaly_val_paths"], "    inference no anomaly train")
         y_true_no_anomaly_test, y_score_no_anomaly_test = self.get_scores(self.datasets_path["no_anomaly_test_paths"] , "    inference no anomaly test")
-        y_true_no_anomaly_all, y_score_no_anomaly_all = self.get_scores(self.datasets_path["no_anomaly_train_paths"] + self.datasets_path["no_anomaly_val_paths"] + self.datasets_path["no_anomaly_test_paths"], "    inference all no anomaly")
         print("")
-        
-        # Get scores for only the test dataset 
-        y_true_test, y_score_test = self.get_scores(self.datasets_path["test_paths"], "    Test dataset")
         
         # Collect all test scores in a dictionary
         self.scores = {
@@ -601,17 +641,8 @@ class EfficientAD:
             "y_true_a": y_true_a,  
             "y_score_a": y_score_a,  
             
-            "y_true_no_anomaly_train": y_true_no_anomaly_train,  
-            "y_score_no_anomaly_train": y_score_no_anomaly_train,
-              
             "y_true_no_anomaly_test": y_true_no_anomaly_test,  
             "y_score_no_anomaly_test": y_score_no_anomaly_test, 
-             
-            "y_true_no_anomaly_all": y_true_no_anomaly_all,  
-            "y_score_no_anomaly_all": y_score_no_anomaly_all,  
-            
-            "y_true_all": y_true_all,  
-            "y_score_all": y_score_all,
         }
         # self.display_eval_result()
         elapsed_time = (time.time() - start_time)
@@ -626,21 +657,18 @@ class EfficientAD:
         width_value = 10  
         
         # Header  
-        print(f"{'Dataset':{width_label}}{'Accuracy':>{width_value}}")  
+        print(f"{'Dataset':{width_label}}{'F1 Score':>{width_value}}")  
         print("-" * (width_label + width_value))  
         
         # Data rows  
-        print(f"{'Anonaly lvl 1':{width_label}}{self.accuracy_threshold(self.scores['y_true_a1'], self.scores['y_score_a1']):>{width_value}.2f}")  
-        print(f"{'Anonaly lvl 2':{width_label}}{self.accuracy_threshold(self.scores['y_true_a2'], self.scores['y_score_a2']):>{width_value}.2f}")  
-        print(f"{'Anonaly lvl 3':{width_label}}{self.accuracy_threshold(self.scores['y_true_a3'], self.scores['y_score_a3']):>{width_value}.2f}")  
-        print(f"\n{'Anomaly all':{width_label}}{self.accuracy_threshold(self.scores['y_true_a'], self.scores['y_score_a']):>{width_value}.2f}")  
+        print(f"{'Anonaly lvl 1 test':{width_label}}{self.get_best_f1(self.scores['y_true_a1'], self.scores['y_score_a1']):>{width_value}.2f}")  
+        print(f"{'Anonaly lvl 2 test':{width_label}}{self.get_best_f1(self.scores['y_true_a2'], self.scores['y_score_a2']):>{width_value}.2f}")  
+        print(f"{'Anonaly lvl 3 test':{width_label}}{self.get_best_f1(self.scores['y_true_a3'], self.scores['y_score_a3']):>{width_value}.2f}")  
+        print(f"\n{'Anomaly all test':{width_label}}{self.get_best_f1(self.scores['y_true_a'], self.scores['y_score_a']):>{width_value}.2f}")  
     
         print("")  
-        print(f"{'No Anomaly Train':{width_label}}{self.accuracy_threshold(self.scores['y_true_no_anomaly_train'], self.scores['y_score_no_anomaly_train']):>{width_value}.2f}")  
-        print(f"{'No Anomaly Test':{width_label}}{self.accuracy_threshold(self.scores['y_true_no_anomaly_test'],  self.scores['y_score_no_anomaly_test']):>{width_value}.2f}")  
-        print(f"{'No Anomaly All':{width_label}}{self.accuracy_threshold(self.scores['y_true_no_anomaly_all'],  self.scores['y_score_no_anomaly_all']):>{width_value}.2f}")  
+        print(f"{'No Anomaly Test':{width_label}}{self.get_best_f1(self.scores['y_true_no_anomaly_test'],  self.scores['y_score_no_anomaly_test'], 0):>{width_value}.2f}")  
     
         print("")  
-        print(f"{'All without train':{width_label}}{self.accuracy_threshold(self.scores['y_true_test'], self.scores['y_score_test']):>{width_value}.2f}")  
-        print(f"{'All with train':{width_label}}{self.accuracy_threshold(self.scores['y_true_all'], self.scores['y_score_all']):>{width_value}.2f}")  
+        print(f"{'All test':{width_label}}{self.get_best_f1(self.scores['y_true_test'], self.scores['y_score_test']):>{width_value}.2f}")  
     

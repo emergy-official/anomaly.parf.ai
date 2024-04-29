@@ -48,6 +48,8 @@ export default function DatasetReactDetail() {
       <div className="text-center md:gap-16 pt-12 md:py-10">
         <h3 className="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">
           <span className="text-[#2a9d8f]">Dataset</span> Explorer
+          <br />
+          <span className="text-[0.6em]">Explore Test data (val and train not included)</span>
         </h3>
       </div>
       <div className="md:gap-16 max-w-7xl mx-auto md:py-10 md:flex">
@@ -123,7 +125,7 @@ export default function DatasetReactDetail() {
             </div>
           </div>
         </div>
-      </div> 
+      </div>
 
       <div className="mx-auto md:gap-16 py-12 p-4 md:py-10 max-w-7xl">
         <h4 className="text-center font-bold mb-5">Table representing the full dataset and model selected</h4>

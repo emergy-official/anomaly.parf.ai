@@ -12,16 +12,16 @@ export const getDatasetSizeChart = () => {
 export const getBenchmarkF1Score = (dataset) => {
     return [{
         name: "Baseline",
-        "F1 score": benchmark[dataset]["Baseline F1 ALL"].toFixed(2)
+        "F1 score": benchmark[dataset]["Baseline F1 TEST"].toFixed(2)
     }, {
         name: "Baseline EI",
-        "F1 score": benchmark[dataset]["Baseline EI F1 ALL"].toFixed(2)
+        "F1 score": benchmark[dataset]["Baseline EI F1 TEST"].toFixed(2)
     }, {
         name: "Efficient AD",
-        "F1 score": benchmark[dataset]["EfficientAD F1 ALL"].toFixed(2)
+        "F1 score": benchmark[dataset]["EfficientAD F1 TEST"].toFixed(2)
     }, {
         name: "FOMO AD",
-        "F1 score": benchmark[dataset]["FOMOAD F1 ALL"].toFixed(2)
+        "F1 score": benchmark[dataset]["FOMOAD F1 TEST"].toFixed(2)
     }]
 }
 export const getBenchmarkF1ScorePerDifficulty = (dataset, model) => {
@@ -37,19 +37,19 @@ export const getBenchmarkF1ScorePerDifficulty = (dataset, model) => {
 
     return [{
         name: "No anomaly",
-        "F1 score": parseFloat(benchmark[dataset][`${m} F1 NO ANOMALY`].toFixed(2)),
+        "F1 score": parseFloat(benchmark[dataset][`${m} F1 NO ANOMALY TEST`].toFixed(2)),
         fill: COLORS[3]
     }, {
         name: "Easy",
-        "F1 score": parseFloat(benchmark[dataset][`${m} F1 EASY`].toFixed(2)),
+        "F1 score": parseFloat(benchmark[dataset][`${m} F1 EASY TEST`].toFixed(2)),
         fill: COLORS[0]
     }, {
         name: "Medium",
-        "F1 score": parseFloat(benchmark[dataset][`${m} F1 MEDIUM`].toFixed(2)),
+        "F1 score": parseFloat(benchmark[dataset][`${m} F1 MEDIUM TEST`].toFixed(2)),
         fill: COLORS[1]
     }, {
         name: "Hard",
-        "F1 score": parseFloat(benchmark[dataset][`${m} F1 HARD`].toFixed(2)),
+        "F1 score": parseFloat(benchmark[dataset][`${m} F1 HARD TEST`].toFixed(2)),
         fill: COLORS[2]
     }]
 }
