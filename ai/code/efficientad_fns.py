@@ -159,13 +159,22 @@ class EfficientAD:
             "anomaly_lvl_3_test_paths": anomaly_lvl_3_test_paths,
             "no_anomaly_test_paths": no_anomaly_test_paths,
             
-            "all_anomaly_test_paths": anomaly_lvl_1_paths + anomaly_lvl_2_paths + anomaly_lvl_3_paths,
-            
             "train_paths": no_anomaly_train_paths,
             "test_paths": no_anomaly_test_paths + anomaly_lvl_1_test_paths + anomaly_lvl_2_test_paths + anomaly_lvl_3_test_paths,
             "val_paths": no_anomaly_val_paths + anomaly_lvl_1_val_paths + anomaly_lvl_2_val_paths + anomaly_lvl_3_val_paths
         }
         
+        
+        print("HEY")
+        print("train_paths", len(no_anomaly_train_paths))
+        print("no_anomaly_test_paths", len(no_anomaly_test_paths))
+        print("no_anomaly_val_paths", len(no_anomaly_val_paths))
+        
+        print("anomaly_test_paths", len(anomaly_lvl_1_test_paths + anomaly_lvl_2_test_paths + anomaly_lvl_3_test_paths))
+        print("anomaly_val_paths", len(anomaly_lvl_1_val_paths + anomaly_lvl_2_val_paths + anomaly_lvl_3_val_paths))
+        
+        print("HEY")
+        print("HEY")
         print("     Dataset paths:", datasets_path.keys())
         
         elapsed_time = (time.time() - start_time) * 1000

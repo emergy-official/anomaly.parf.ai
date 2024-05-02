@@ -65,8 +65,9 @@ def build_model():
     # Define the new model's architecture  
     model = Sequential([  
         base_model,  
-        Dense(128, activation='relu'),  # Add a fully connected layer with 128 units and ReLU activation 
-        Dense(2, activation='softmax') # Add an output layer with 2 units using softmax for multi-class classification (Future baseline improvment where you need to classify different anomaly)
+        Dense(128, activation='relu'), # Add a fully connected layer with 128 units and ReLU activation 
+        Dense(2, activation='softmax') # Add an output layer with 2 units using softmax for multi-class classification 
+                                       # (Future baseline improvment where you need to classify different anomaly)
     ])  
   
     # Compile the model with Adam optimizer, low learning rate, categorical cross-entropy loss, and with accuracy metric  
@@ -110,6 +111,10 @@ def create_model_and_save(cfg):
     # Split data into train, validation, and test sets using sklearn's train_test_split.  
     train_paths, test_paths, train_labels, test_labels = train_test_split(all_paths, all_labels, test_size=0.2, random_state=cfg["seed"])  
     train_paths, val_paths, train_labels, val_labels = train_test_split(train_paths, train_labels, test_size=0.1, random_state=cfg["seed"])  
+    
+    print("train_paths", len(train_paths))
+    print("val_paths", len(val_paths))
+    print("test_paths", len(test_paths))
     
     # Convert lists into pandas DataFrames for the data generators.  
     train_df = pd.DataFrame({'filename': train_paths, 'class': train_labels})  
