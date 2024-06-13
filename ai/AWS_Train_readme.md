@@ -40,7 +40,7 @@ aws ec2 authorize-security-group-ingress --group-name $SSH_GROUP_NAME --protocol
 SG_GROUP_ID=$(aws ec2 describe-security-groups --query "SecurityGroups[?GroupName=='$SSH_GROUP_NAME'].GroupId" --output text)
 
 #### Supported EC2 instances: G4dn, G5, G6, Gr6, P4, P4de, P5. Release notes: https://docs.aws.amazon.com/dlami/latest/devguide/appendix-ami-release-notes.html
-aws ec2 run-instances --image-id ami-0e4cc88070dfcf17b \
+aws ec2 run-instances --image-id ami-09c035ed5b62911e4 \
 --instance-type g4dn.xlarge \
 --key-name aws_parf_dev \
 --security-group-ids $SG_GROUP_ID \
