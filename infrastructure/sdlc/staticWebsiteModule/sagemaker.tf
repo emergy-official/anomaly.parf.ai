@@ -39,7 +39,7 @@ resource "aws_sagemaker_endpoint_configuration" "api" {
     model_name   = aws_sagemaker_model.api.name
     serverless_config {
       max_concurrency   = 3
-      memory_size_in_mb = 1024
+      memory_size_in_mb = 4096
     }
   }
 }
